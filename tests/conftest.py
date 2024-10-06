@@ -1,6 +1,9 @@
-from typing import Callable
+from typing import Callable, List
 from pytest import fixture
 from checkers.contracts import Model
+from checkers.collectors import ModelCollector, CheckCollector
+from checkers.runner import Runner
+from checkers.core import Checker
 
 
 @fixture
@@ -31,3 +34,27 @@ def model():
         unique_id='test',
         resource_type='model'
     )
+
+
+@fixture
+def model_collector(model):
+    class MockModelCollector(ModelCollector):
+        def collect(self) -> List[Model]:
+            return [model]
+    return MockModelCollector()
+
+
+@fixture
+def check_collector(passing_check):
+    checker = Checker(check=passing_check)
+
+    class MockCheckCollector(CheckCollector):
+        def collect(self) -> List[Checker]:
+            return [checker]
+    
+    return MockCheckCollector()
+
+
+@fixture
+def runner(check_collector, model_collector):
+    return Runner(check_collector=check_collector, model_collector=model_collector)
