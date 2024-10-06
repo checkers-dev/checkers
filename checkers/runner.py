@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, List
 from .contracts import CheckResult
 from .collectors import CheckCollector, ModelCollector
 from .printer import Printer
@@ -11,8 +11,11 @@ class Runner:
         self.model_collector = model_collector
         self.printer = printer
         self.config = config
+        self.results: List[CheckResult] = list()
 
     def run(self) -> Iterable[CheckResult]:
         for model in self.model_collector.collect():
             for check in self.check_collector.collect():
-                yield check.run(model)
+                res = check.run(model)
+                self.results.append(res)
+                yield res
