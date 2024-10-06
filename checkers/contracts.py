@@ -1,8 +1,7 @@
 from typing import Optional
 import datetime as dt
-from dataclasses import dataclass
 from enum import Enum
-
+from pydantic import BaseModel
 
 # I think let's make the values here `pass`, `warn`, `error`, etc
 class CheckResultStatus(Enum):
@@ -13,8 +12,7 @@ class CheckResultStatus(Enum):
     skipped = 4
 
 
-@dataclass
-class CheckResult:
+class CheckResult(BaseModel):
     check_name: str
     checked_at: dt.datetime
     status: CheckResultStatus
@@ -36,8 +34,7 @@ class CheckResult:
         )
 
 
-@dataclass
-class Model:
+class Model(BaseModel):
     name: str
     unique_id: str
     resource_type: str
