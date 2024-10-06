@@ -1,3 +1,4 @@
+import json
 from typing import List
 from types import ModuleType
 from checkers import checks
@@ -7,7 +8,6 @@ from .config import Config
 
 
 class CheckCollector:
-
     def __init__(self, config: Config):
         self.config = config
 
@@ -27,9 +27,18 @@ class CheckCollector:
 
 
 class ModelCollector:
-
     def __init__(self, config: Config):
         self.config = config
 
+    def load_manifest(self, path: str) -> dict:
+        with open(path) as fh:
+            data = json.load(fh)
+        return data
+
     def collect(self) -> List[Model]:
-        return [Model(name="temp", unique_id="temp", resource_type="model")]
+        manifest = self.load_manifest(self.config.manifest_path)
+        results = list()
+        for _, v in manifest["nodes"].items():
+            if v["resource_type"] == "model":
+                results.append(Model(**v))
+        return results

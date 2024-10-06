@@ -1,4 +1,5 @@
-from click import group, pass_obj, pass_context
+import os
+from click import group, pass_obj, pass_context, option
 from .runner import Runner
 from .collectors import CheckCollector, ModelCollector
 from .summarizer import Summarizer
@@ -8,12 +9,13 @@ from .config import Config
 
 @group
 @pass_context
-def cli(ctx):
+@option("--dbt_project_dir", default=os.getcwd(), envvar="DBT_PROJECT_DIR")
+def cli(ctx, dbt_project_dir: str):
     """
     An extensible dbt linter
     """
 
-    ctx.obj = Config()
+    ctx.obj = Config(dbt_project_dir=dbt_project_dir)
 
 
 @cli.command()

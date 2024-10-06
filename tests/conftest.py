@@ -11,6 +11,7 @@ from checkers.runner import Runner
 from checkers.core import Checker
 from checkers.printer import Printer
 from checkers.config import Config
+from checkers import config as config_module
 
 
 @fixture
@@ -43,8 +44,19 @@ def model():
 
 
 @fixture
-def config():
-    return Config()
+def mock_dbt_project(tmp_path: Path):
+    tests_dir = Path(os.path.dirname(__file__))
+    mock_dbt_project_dir = tests_dir / "mock"
+    target_dir = tmp_path / "mock"
+    copytree(mock_dbt_project_dir, target_dir)
+    os.chdir(target_dir)
+    return target_dir
+
+
+@fixture
+def config(mock_dbt_project):
+    dbt_project_dir = str(mock_dbt_project)
+    return Config(dbt_project_dir=dbt_project_dir)
 
 
 @fixture
@@ -111,13 +123,3 @@ def check_result_error(error_check, model):
     checker = Checker(check=error_check)
     res = checker.run(model)
     return res
-
-
-@fixture
-def mock_dbt_project(tmp_path: Path):
-    tests_dir = Path(os.path.dirname(__file__))
-    mock_dbt_project_dir = tests_dir / "mock"
-    target_dir = tmp_path / "mock"
-    copytree(mock_dbt_project_dir, target_dir)
-    os.chdir(target_dir)
-    return target_dir
