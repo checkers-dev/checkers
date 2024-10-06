@@ -14,16 +14,17 @@ class CheckCollector:
     def collect(self) -> List[Checker]:
         builtin_checks = self.collect_builtin_checks()
         return [Checker(check=c) for c in builtin_checks]
-    
+
     def collect_checks_from_module(self, module: ModuleType):
         results = list()
         for k, v in vars(module).items():
-            if k.startswith('check') and callable(v):
+            if k.startswith("check") and callable(v):
                 results.append(v)
         return results
 
     def collect_builtin_checks(self):
         return self.collect_checks_from_module(checks)
+
 
 class ModelCollector:
 
