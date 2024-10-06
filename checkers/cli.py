@@ -1,5 +1,6 @@
 import os
 from click import group, pass_obj, pass_context, option
+from rich import print
 from .runner import Runner
 from .collectors import CheckCollector, ModelCollector
 from .summarizer import Summarizer
@@ -34,3 +35,13 @@ def run(obj: Config):
         runner.printer.print(res)
     summary = Summarizer(runner)
     exit(summary.exit_code())
+
+
+@cli.command()
+@pass_obj
+def debug(obj: Config):
+    """
+    Print configuration information and exit
+    """
+
+    print(obj)
