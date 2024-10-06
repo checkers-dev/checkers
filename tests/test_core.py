@@ -1,4 +1,3 @@
-from typing import Callable
 from checkers.core import Checker
 from checkers.contracts import CheckResultStatus
 

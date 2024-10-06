@@ -1,6 +1,7 @@
 from click import group, pass_obj, pass_context
 from .runner import Runner
 from .collectors import CheckCollector, ModelCollector
+from .summarizer import Summarizer
 from .printer import Printer
 from .config import Config
 
@@ -29,3 +30,5 @@ def run(obj: Config):
     )
     for res in runner.run():
         runner.printer.print(res)
+    summary = Summarizer(runner)
+    exit(summary.exit_code())

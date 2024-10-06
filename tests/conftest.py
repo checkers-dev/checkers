@@ -1,6 +1,7 @@
 from typing import Callable, List
 from pytest import fixture
 from rich.console import Console
+from checkers.summarizer import Summarizer
 from checkers.contracts import Model
 from checkers.collectors import ModelCollector, CheckCollector
 from checkers.runner import Runner
@@ -81,3 +82,29 @@ def runner(check_collector, model_collector, printer, config):
         printer=printer,
         config=config,
     )
+
+
+@fixture
+def summary(runner):
+    return Summarizer(runner=runner)
+
+
+@fixture
+def check_result_passing(passing_check, model):
+    checker = Checker(check=passing_check)
+    res = checker.run(model)
+    return res
+
+
+@fixture
+def check_result_failure(failing_check, model):
+    checker = Checker(check=failing_check)
+    res = checker.run(model)
+    return res
+
+
+@fixture
+def check_result_error(error_check, model):
+    checker = Checker(check=error_check)
+    res = checker.run(model)
+    return res
