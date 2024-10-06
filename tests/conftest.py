@@ -6,6 +6,7 @@ from checkers.collectors import ModelCollector, CheckCollector
 from checkers.runner import Runner
 from checkers.core import Checker
 from checkers.printer import Printer
+from checkers.config import Config
 
 
 @fixture
@@ -39,22 +40,27 @@ def model():
 
 
 @fixture
-def model_collector(model):
-    class MockModelCollector(ModelCollector):
-        def collect(self) -> List[Model]:
-            return [model]
-    return MockModelCollector()
+def config():
+    return Config()
 
 
 @fixture
-def check_collector(passing_check):
+def model_collector(model, config):
+    class MockModelCollector(ModelCollector):
+        def collect(self) -> List[Model]:
+            return [model]
+    return MockModelCollector(config=config)
+
+
+@fixture
+def check_collector(passing_check, config):
     checker = Checker(check=passing_check)
 
     class MockCheckCollector(CheckCollector):
         def collect(self) -> List[Checker]:
             return [checker]
     
-    return MockCheckCollector()
+    return MockCheckCollector(config=config)
 
 
 @fixture
@@ -63,10 +69,10 @@ def console():
 
 
 @fixture
-def printer(console):
-    return Printer(console=console)
+def printer(console, config):
+    return Printer(console=console, config=config)
 
 
 @fixture
-def runner(check_collector, model_collector, printer):
-    return Runner(check_collector=check_collector, model_collector=model_collector, printer=printer)
+def runner(check_collector, model_collector, printer, config):
+    return Runner(check_collector=check_collector, model_collector=model_collector, printer=printer, config=config)
