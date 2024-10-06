@@ -5,7 +5,7 @@ from .contracts import CheckResult, CheckResultStatus, Model
 class Checker:
     def __init__(self, check: Callable):
         self.check = check
-    
+
     def run(self, node: Model) -> CheckResult:
         try:
             self.check(node)
@@ -18,4 +18,6 @@ class Checker:
             status = CheckResultStatus.error
             message = str(err)
 
-        return CheckResult.from_node(check_name=self.check.__name__, node=node, status=status, message=message)
+        return CheckResult.from_node(
+            check_name=self.check.__name__, node=node, status=status, message=message
+        )

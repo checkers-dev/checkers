@@ -6,7 +6,13 @@ from .config import Config
 
 
 class Runner:
-    def __init__(self, check_collector: CheckCollector, model_collector: ModelCollector, printer: Printer, config: Config):
+    def __init__(
+        self,
+        check_collector: CheckCollector,
+        model_collector: ModelCollector,
+        printer: Printer,
+        config: Config,
+    ):
         self.check_collector = check_collector
         self.model_collector = model_collector
         self.printer = printer

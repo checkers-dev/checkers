@@ -13,6 +13,7 @@ from checkers.config import Config
 def failing_check() -> Callable:
     def check(node):
         assert False, "This failed"
+
     return check
 
 
@@ -20,6 +21,7 @@ def failing_check() -> Callable:
 def passing_check() -> Callable:
     def check(node):
         return
+
     return check
 
 
@@ -27,16 +29,13 @@ def passing_check() -> Callable:
 def error_check() -> Callable:
     def check(node):
         return 1 / 0
+
     return check
 
 
 @fixture
 def model():
-    return Model(
-        name='test', 
-        unique_id='test',
-        resource_type='model'
-    )
+    return Model(name="test", unique_id="test", resource_type="model")
 
 
 @fixture
@@ -49,6 +48,7 @@ def model_collector(model, config):
     class MockModelCollector(ModelCollector):
         def collect(self) -> List[Model]:
             return [model]
+
     return MockModelCollector(config=config)
 
 
@@ -59,7 +59,7 @@ def check_collector(passing_check, config):
     class MockCheckCollector(CheckCollector):
         def collect(self) -> List[Checker]:
             return [checker]
-    
+
     return MockCheckCollector(config=config)
 
 
@@ -75,4 +75,9 @@ def printer(console, config):
 
 @fixture
 def runner(check_collector, model_collector, printer, config):
-    return Runner(check_collector=check_collector, model_collector=model_collector, printer=printer, config=config)
+    return Runner(
+        check_collector=check_collector,
+        model_collector=model_collector,
+        printer=printer,
+        config=config,
+    )

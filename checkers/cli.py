@@ -15,13 +15,17 @@ def cli(ctx):
     ctx.obj = Config()
 
 
-
 @cli.command()
 @pass_obj
 def run(obj: Config):
     check_collector = CheckCollector(config=obj)
     model_collector = ModelCollector(config=obj)
     printer = Printer(config=obj)
-    runner = Runner(check_collector=check_collector, model_collector=model_collector, printer=printer, config=obj)
+    runner = Runner(
+        check_collector=check_collector,
+        model_collector=model_collector,
+        printer=printer,
+        config=obj,
+    )
     for res in runner.run():
         runner.printer.print(res)

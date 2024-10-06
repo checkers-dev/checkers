@@ -3,6 +3,7 @@ import datetime as dt
 from enum import Enum
 from pydantic import BaseModel
 
+
 # I think let's make the values here `pass`, `warn`, `error`, etc
 class CheckResultStatus(Enum):
     passing = 0
@@ -22,7 +23,13 @@ class CheckResult(BaseModel):
     message: Optional[str] = None
 
     @classmethod
-    def from_node(cls, check_name: str, node: "Model", message: Optional[str], status: CheckResultStatus) -> "CheckResult":
+    def from_node(
+        cls,
+        check_name: str,
+        node: "Model",
+        message: Optional[str],
+        status: CheckResultStatus,
+    ) -> "CheckResult":
         return cls(
             check_name=check_name,
             checked_at=dt.datetime.utcnow(),
