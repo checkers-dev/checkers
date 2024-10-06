@@ -6,6 +6,9 @@ class Checker:
     def __init__(self, check: Callable):
         self.check = check
 
+    def __repr__(self):
+        return f"<Checker {self.check.__name__}>"
+
     def run(self, node: Model) -> CheckResult:
         try:
             self.check(node)

@@ -1,2 +1,2 @@
-def check_temp(model):
+def check_builtin_check(model):
     pass
