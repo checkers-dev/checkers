@@ -1,6 +1,7 @@
 from click import group
 from .runner import Runner
 from .collectors import CheckCollector, ModelCollector
+from .printer import Printer
 
 
 @group
@@ -14,6 +15,7 @@ def cli():
 def run():
     check_collector = CheckCollector()
     model_collector = ModelCollector()
-    runner = Runner(check_collector=check_collector, model_collector=model_collector)
+    printer = Printer()
+    runner = Runner(check_collector=check_collector, model_collector=model_collector, printer=printer)
     for res in runner.run():
-        print(res)
+        runner.printer.print(res)

@@ -1,9 +1,11 @@
 from typing import Callable, List
 from pytest import fixture
+from rich.console import Console
 from checkers.contracts import Model
 from checkers.collectors import ModelCollector, CheckCollector
 from checkers.runner import Runner
 from checkers.core import Checker
+from checkers.printer import Printer
 
 
 @fixture
@@ -56,5 +58,15 @@ def check_collector(passing_check):
 
 
 @fixture
-def runner(check_collector, model_collector):
-    return Runner(check_collector=check_collector, model_collector=model_collector)
+def console():
+    return Console()
+
+
+@fixture
+def printer(console):
+    return Printer(console=console)
+
+
+@fixture
+def runner(check_collector, model_collector, printer):
+    return Runner(check_collector=check_collector, model_collector=model_collector, printer=printer)
