@@ -1,3 +1,6 @@
+import os
+from shutil import copytree
+from pathlib import Path
 from typing import Callable, List
 from pytest import fixture
 from rich.console import Console
@@ -108,3 +111,13 @@ def check_result_error(error_check, model):
     checker = Checker(check=error_check)
     res = checker.run(model)
     return res
+
+
+@fixture
+def mock_dbt_project(tmp_path: Path):
+    tests_dir = Path(os.path.dirname(__file__))
+    mock_dbt_project_dir = tests_dir / "mock"
+    target_dir = tmp_path / "mock"
+    copytree(mock_dbt_project_dir, target_dir)
+    os.chdir(target_dir)
+    return target_dir
