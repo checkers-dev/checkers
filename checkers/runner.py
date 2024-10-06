@@ -11,4 +11,4 @@ class Runner:
     def run(self) -> Iterable[CheckResult]:
         for model in self.model_collector.collect():
             for check in self.check_collector.collect():
-                yield check.check(model)
+                yield check.run(model)
