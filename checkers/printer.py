@@ -20,8 +20,9 @@ class CheckResultRenderable:
 
     def __rich__(self):
         color = self.colors[self.check_result.status]
+        text = f"  {self.check_result.status.value}".ljust(8)
         status = Text(
-            f"  {self.check_result.status.value}  ",
+            text,
             style=f"bold bright_white on {color}",
         )
         status.append(
