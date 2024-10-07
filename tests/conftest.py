@@ -89,6 +89,11 @@ def client(config) -> Client:
 
 
 @fixture
+def checkers_root():
+    return str(Path(__file__).parent.parent)
+
+
+@fixture
 def model_collector(model, config):
     class MockModelCollector(ModelCollector):
         def collect(self) -> List[Model]:

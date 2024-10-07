@@ -1,4 +1,4 @@
-from checkers.checks import check_builtin_check
+from checkers.checks import check_model_has_description
 from checkers.config import Config
 from checkers.collectors import CheckCollector, ModelCollector
 
@@ -6,7 +6,7 @@ from checkers.collectors import CheckCollector, ModelCollector
 def test_check_collector_collects_builtin_checks(config: Config):
     collector = CheckCollector(config=config)
     checks = collector.collect_builtin_checks()
-    assert check_builtin_check in checks
+    assert check_model_has_description in checks
 
 
 def test_check_collector_collects_linter_checks(config: Config):

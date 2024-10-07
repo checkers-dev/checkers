@@ -1,0 +1,45 @@
+site_name: Checkers
+
+
+
+theme:
+  name: material
+  features:
+    - navigation.footer
+    # - navigation.tabs
+    # - navigation.sections
+    - navigation.instant
+    - navigation.tracking
+    - content.action.edit
+    - toc.integrate # check feedback
+
+extra:
+  version:
+    provider: mike
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - toc:
+      toc_depth: 3
+      permalink: "#"
+
+  # all for code blocks
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details # allow collapsible blocks
+  - admonition # allow call outs
+
+repo_url: https://github.com/checkers-dev/checkers
+repo_name: checkers-dev/checkers
+edit_uri: edit/main/docs/
+
+nav:
+  - Home: index.md
+  - Checks:
+    - Model descriptions: checks/check_model_has_description.md
