@@ -6,11 +6,11 @@ from pydantic import BaseModel
 
 # I think let's make the values here `pass`, `warn`, `error`, etc
 class CheckResultStatus(Enum):
-    passing = 0
-    warning = 1
-    failure = 2
-    error = 3
-    skipped = 4
+    passing = "PASS"
+    warning = "WARN"
+    failure = "FAIL"
+    error = "ERROR"
+    skipped = "SKIP"
 
 
 class CheckResult(BaseModel):

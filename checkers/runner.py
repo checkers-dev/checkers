@@ -1,7 +1,7 @@
 from typing import Iterable, List
 from .contracts import CheckResult
 from .collectors import CheckCollector, ModelCollector
-from .printer import Printer
+from .printer import Printer, CheckResultRenderable
 from .config import Config
 
 
@@ -24,5 +24,5 @@ class Runner:
             for check in self.check_collector.collect():
                 res = check.run(model)
                 self.results.append(res)
-                self.printer.print(res)
+                self.printer.print(CheckResultRenderable(res))
                 yield res
