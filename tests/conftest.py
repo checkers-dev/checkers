@@ -2,8 +2,9 @@ import os
 from shutil import copytree
 from pathlib import Path
 from typing import Callable, List
-from pytest import fixture
+from pytest import fixture, mark
 from rich.console import Console
+from checkers.clients.api_client import Client
 from checkers.summarizer import Summarizer
 from checkers.contracts import Model
 from checkers.collectors import ModelCollector, CheckCollector
@@ -12,6 +13,29 @@ from checkers.core import Checker
 from checkers.printer import Printer
 from checkers.config import Config
 from checkers import config as config_module
+
+
+def pytest_configure(config):
+    config.addinivalue_line("markers", "integration: integration tests")
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--integrations",
+        action="store_true",
+        default=False,
+        help="run integration tests",
+    )
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--integrations"):
+        # --integration given in cli: do not skip integration tests
+        return
+    skip_integration = mark.skip(reason="need --integration option to run")
+    for item in items:
+        if "integration" in item.keywords:
+            item.add_marker(skip_integration)
 
 
 @fixture
@@ -57,6 +81,11 @@ def mock_dbt_project(tmp_path: Path):
 def config(mock_dbt_project):
     dbt_project_dir = str(mock_dbt_project)
     return Config(dbt_project_dir=dbt_project_dir)
+
+
+@fixture
+def client(config) -> Client:
+    return Client(config=config)
 
 
 @fixture
