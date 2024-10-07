@@ -31,8 +31,8 @@ def run(obj: Config):
         printer=printer,
         config=obj,
     )
-    for res in runner.run():
-        runner.printer.print(res)
+    for _ in runner.run():
+        pass
     summary = Summarizer(runner)
     exit(summary.exit_code())
 

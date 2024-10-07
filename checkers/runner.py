@@ -24,4 +24,5 @@ class Runner:
             for check in self.check_collector.collect():
                 res = check.run(model)
                 self.results.append(res)
+                self.printer.print(res)
                 yield res
