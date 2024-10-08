@@ -5,6 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "checkers"
 version = "0.0.2rc0"
+description = "An extensible linter for dbt"
+authors = [
+  {name = "Tom Waterman", email = "tjwaterman99@gmail.com"}
+]
 
 dependencies = [
   "pydantic<=2",
