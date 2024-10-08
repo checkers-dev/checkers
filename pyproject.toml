@@ -16,3 +16,6 @@ dependencies = [
   "click<9.0",
   "rich<14.0",
 ]
+
+[project.scripts]
+checkers = "checkers.cli:cli"
