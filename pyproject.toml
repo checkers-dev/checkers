@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "checkers-cli"
-version = "0.0.2rc2"
+version = "0.0.2rc3"
 description = "An extensible linter for dbt"
 authors = [
   {name = "Tom Waterman", email = "tjwaterman99@gmail.com"}
