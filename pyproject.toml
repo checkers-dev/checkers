@@ -9,9 +9,10 @@ description = "An extensible linter for dbt"
 authors = [
   {name = "Tom Waterman", email = "tjwaterman99@gmail.com"}
 ]
+readme = "README.md"
 
 dependencies = [
-  "pydantic<=2",
-  "click<=8",
-  "rich<=13",
+  "pydantic<3.0",
+  "click<9.0",
+  "rich<14.0",
 ]
