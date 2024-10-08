@@ -41,9 +41,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install build
     - name: Build package
-      run: echo 'wip'
-    # - name: Publish package
-    #   uses: pypa/gh-action-pypi-publish@v1.10.3
-    #   with:
-    #     user: __token__
-    #     password: ${{ secrets.PYPI_API_TOKEN }}
+      run: python -m build
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@v1.10.3
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}

@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "checkers"
+version = "0.0.1"
+
+dependencies = [
+  "pydantic<=2",
+  "click<=8",
+  "rich<=13",
+]
