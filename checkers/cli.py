@@ -8,7 +8,7 @@ from .printer import Printer
 from .config import Config
 
 
-@group
+@group()
 @pass_context
 @option("--dbt_project_dir", default=os.getcwd(), envvar="DBT_PROJECT_DIR")
 def cli(ctx, dbt_project_dir: str):
