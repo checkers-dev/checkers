@@ -63,14 +63,15 @@ def error_check() -> Callable:
     return check
 
 
-@fixture
-def mock_dbt_project(tmp_path: Path):
+@fixture(scope="session")
+def mock_dbt_project(tmpdir_factory):
+    root = tmpdir_factory.mktemp("root")
     tests_dir = Path(os.path.dirname(__file__))
     mock_dbt_project_dir = tests_dir / "mock"
-    target_dir = tmp_path / "mock"
+    target_dir = root / "mock"
     copytree(mock_dbt_project_dir, target_dir)
     os.chdir(target_dir)
-    return target_dir
+    return Path(target_dir)
 
 
 @fixture
