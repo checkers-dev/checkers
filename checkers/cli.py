@@ -17,7 +17,7 @@ from .config import Config, load_config
     help="Path to a checkers configuration file. If not supplied, will use `linter.toml` in the current working directory.",
 )
 @option(
-    "--dbt_project_dir",
+    "--dbt-project-dir",
     default=os.getcwd(),
     envvar="DBT_PROJECT_DIR",
     help="Path to a dbt project. If not supplied, will use the current working directly.",
@@ -33,6 +33,10 @@ def cli(ctx, config_path, dbt_project_dir: str):
 @cli.command()
 @pass_obj
 def run(obj: Config):
+    """
+    Run the checks
+    """
+
     check_collector = CheckCollector(config=obj)
     model_collector = ModelCollector(config=obj)
     printer = Printer(config=obj)
@@ -52,7 +56,20 @@ def run(obj: Config):
 @pass_obj
 def debug(obj: Config):
     """
-    Print configuration information and exit
+    Print config details
     """
 
     print(obj)
+
+
+@cli.command()
+@pass_obj
+def collect(obj: Config):
+    """
+    Print the names of collected checks
+    """
+
+    collector = CheckCollector(config=obj)
+    printer = Printer(config=obj)
+    for check in collector.collect():
+        printer.print(check)
