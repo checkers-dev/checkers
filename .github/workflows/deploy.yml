@@ -26,7 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Deploy site
-      run: python -m mkdocs gh-deploy
+      run: python -m mkdocs --verbose gh-deploy
 
   pypi:
     runs-on: ubuntu-latest
