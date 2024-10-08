@@ -24,7 +24,7 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - toc:
-      toc_depth: 3
+      toc_depth: 2
       permalink: "#"
 
   # all for code blocks
@@ -48,5 +48,6 @@ nav:
   - Home: index.md
   - Builtin Checks:
     - Model descriptions: checks/check_model_has_description.md
+    - Something else: checks/check_something_else.md
   - Configuration: configuration.md
   - Reference: reference.md

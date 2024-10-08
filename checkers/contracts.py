@@ -60,3 +60,8 @@ class Model(BaseModel):
     """
     The resource type. Always `model`.
     """
+
+    description: Optional[str] = None
+    """
+    The model's description
+    """

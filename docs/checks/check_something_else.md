@@ -8,9 +8,7 @@ Checks that a model includes a description in its config.
 
 ## Fixing
 
-Add a description to the model's config block, or update the model's yaml entry.
-
-Example config block:
+Add a description to the model's config block.
 
 ```sql
 {{
@@ -18,12 +16,4 @@ Example config block:
     description="A model representing all the product's users."
   )
 }}
-```
-
-Example yaml entry:
-
-```yaml
-models:
-    - name: user
-      description: A model representing all the product's users
 ```
