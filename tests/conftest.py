@@ -1,3 +1,4 @@
+import json
 import os
 from shutil import copytree
 from pathlib import Path
@@ -6,7 +7,7 @@ from pytest import fixture, mark
 from rich.console import Console
 from checkers.clients.api_client import Client
 from checkers.summarizer import Summarizer
-from checkers.contracts import Model
+from checkers.contracts import Model, Manifest
 from checkers.collectors import ModelCollector, CheckCollector
 from checkers.runner import Runner
 from checkers.core import Checker
@@ -63,11 +64,6 @@ def error_check() -> Callable:
 
 
 @fixture
-def model():
-    return Model(name="test", unique_id="test", resource_type="model")
-
-
-@fixture
 def mock_dbt_project(tmp_path: Path):
     tests_dir = Path(os.path.dirname(__file__))
     mock_dbt_project_dir = tests_dir / "mock"
@@ -75,6 +71,25 @@ def mock_dbt_project(tmp_path: Path):
     copytree(mock_dbt_project_dir, target_dir)
     os.chdir(target_dir)
     return target_dir
+
+
+@fixture
+def manifest(mock_dbt_project: Path):
+    manifest_path = mock_dbt_project / "target" / "manifest.json"
+    data = json.loads(manifest_path.read_text())
+    return Manifest(**data)
+
+
+@fixture
+def model(manifest):
+    return Model(
+        name="test",
+        unique_id="test",
+        resource_type="model",
+        manifest=manifest,
+        original_file_path="models/test/test.sql",
+        fqn=["prod", "core", "test.sql"],
+    )
 
 
 @fixture

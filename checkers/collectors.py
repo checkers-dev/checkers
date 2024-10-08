@@ -5,7 +5,7 @@ from typing import List
 from types import ModuleType
 from checkers import checks
 from .core import Checker
-from .contracts import Model
+from .contracts import Model, Manifest
 from .config import Config
 
 
@@ -42,15 +42,15 @@ class ModelCollector:
     def __init__(self, config: Config):
         self.config = config
 
-    def load_manifest(self, path: str) -> dict:
+    def load_manifest(self, path: str) -> Manifest:
         with open(path) as fh:
-            data = json.load(fh)
+            data = Manifest(**json.load(fh))
         return data
 
     def collect(self) -> List[Model]:
         manifest = self.load_manifest(self.config.manifest_path)
         results = list()
-        for _, v in manifest["nodes"].items():
+        for _, v in manifest.nodes.items():
             if v["resource_type"] == "model":
-                results.append(Model(**v))
+                results.append(Model(**v, manifest=manifest))
         return results

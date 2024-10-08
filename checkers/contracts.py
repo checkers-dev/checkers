@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict, List
 import datetime as dt
 from enum import Enum
 from pydantic import BaseModel
@@ -41,6 +41,10 @@ class CheckResult(BaseModel):
         )
 
 
+class Manifest(BaseModel):
+    nodes: Dict[str, Dict]
+
+
 class Model(BaseModel):
     """
     Represents a model in a dbt project
@@ -64,4 +68,19 @@ class Model(BaseModel):
     description: Optional[str] = None
     """
     The model's description
+    """
+
+    original_file_path: str
+    """
+    The path to the model
+    """
+
+    fqn: List[str]
+    """
+    An array containing the fully qualified database name of the model
+    """
+
+    manifest: Manifest
+    """
+    The Manifest object. Useful for querying the models' parents, children, etc.
     """
