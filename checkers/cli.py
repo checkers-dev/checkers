@@ -5,18 +5,29 @@ from .runner import Runner
 from .collectors import CheckCollector, ModelCollector
 from .summarizer import Summarizer
 from .printer import Printer
-from .config import Config
+from .config import Config, load_config
 
 
 @group()
 @pass_context
-@option("--dbt_project_dir", default=os.getcwd(), envvar="DBT_PROJECT_DIR")
-def cli(ctx, dbt_project_dir: str):
+@option(
+    "--config-path",
+    default=None,
+    envvar="CHECKERS_CONFIG_PATH",
+    help="Path to a checkers configuration file. If not supplied, will use `linter.toml` in the current working directory.",
+)
+@option(
+    "--dbt_project_dir",
+    default=os.getcwd(),
+    envvar="DBT_PROJECT_DIR",
+    help="Path to a dbt project. If not supplied, will use the current working directly.",
+)
+def cli(ctx, config_path, dbt_project_dir: str):
     """
     An extensible dbt linter
     """
 
-    ctx.obj = Config(dbt_project_dir=dbt_project_dir)
+    ctx.obj = load_config(path=config_path, dbt_project_dir=dbt_project_dir)
 
 
 @cli.command()
