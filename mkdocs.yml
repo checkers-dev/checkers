@@ -1,6 +1,5 @@
 site_name: Checkers
-
-
+site_url: https://www.getcheckers.com/docs
 
 theme:
   name: material
