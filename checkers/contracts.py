@@ -42,6 +42,21 @@ class CheckResult(BaseModel):
 
 
 class Model(BaseModel):
+    """
+    Represents a model in a dbt project
+    """
+
     name: str
+    """
+    The name of the model
+    """
+
     unique_id: str
+    """
+    The unique id of the model
+    """
+
     resource_type: str
+    """
+    The resource type. Always `model`.
+    """

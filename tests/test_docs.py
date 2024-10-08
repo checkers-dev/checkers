@@ -19,7 +19,7 @@ def test_checks_have_docs_page(config, checkers_root):
         open(os.path.join(checkers_root, "mkdocs.yml"), "r"), Loader=yaml.SafeLoader
     )
     site_doc_pages = [
-        list(v.values())[0] for v in site_pages["nav"][2]["Builtin Checks"]
+        list(v.values())[0] for v in site_pages["nav"][1]["Builtin Checks"]
     ]
     site_doc_page_names = [d.split("/")[-1].replace(".md", "") for d in site_doc_pages]
 

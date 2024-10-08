@@ -5,10 +5,11 @@ theme:
   name: material
   features:
     - navigation.footer
-    # - navigation.tabs
-    # - navigation.sections
-    - navigation.instant
-    - navigation.tracking
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
     - content.action.edit
     - toc.integrate # check feedback
 
@@ -45,7 +46,7 @@ edit_uri: edit/main/docs/
 # as they parse this structure.
 nav:
   - Home: index.md
-  - Quickstart: quickstart.md
   - Builtin Checks:
     - Model descriptions: checks/check_model_has_description.md
   - Configuration: configuration.md
+  - Reference: reference.md
