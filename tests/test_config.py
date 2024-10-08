@@ -1,5 +1,6 @@
+import toml
 import os
-from checkers.config import load_config
+from checkers.config import load_config, Config
 
 
 def test_load_config_with_defaults():
@@ -24,3 +25,12 @@ def test_load_config_from_file_with_overrides(checkers_root):
     config = load_config(path)
     override_config = load_config(path, api_host="somehost")
     assert config.api_host != override_config.api_host
+
+
+def test_config_dumps(config: Config, tmpdir):
+    out = tmpdir / "config.toml"
+    config.dump(out)
+    with open(out) as fh:
+        res = toml.load(fh)
+    assert config.api_host == res["api_host"]
+    assert config.dbt_project_dir == res["dbt_project_dir"]

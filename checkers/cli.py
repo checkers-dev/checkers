@@ -73,3 +73,19 @@ def collect(obj: Config):
     printer = Printer(config=obj)
     for check in collector.collect():
         printer.print(check)
+
+
+@cli.command()
+@option(
+    "--path",
+    "-p",
+    help="Directory to place the file. Defaults to current working directory.",
+    default=os.getcwd(),
+)
+@pass_obj
+def init(obj: Config, path: str):
+    """
+    Create default `linter.toml` file
+    """
+
+    obj.dump(os.path.join(path, "linter.toml"))

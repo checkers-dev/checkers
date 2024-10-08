@@ -13,6 +13,10 @@ class Config(BaseModel):
     def manifest_path(self):
         return os.path.join(self.dbt_project_dir, "target", "manifest.json")
 
+    def dump(self, out):
+        with open(out, "w") as fh:
+            toml.dump(self.model_dump(), fh)
+
 
 def load_config(path: Optional[str] = None, **overrides) -> Config:
     if path is None:
