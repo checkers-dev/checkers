@@ -16,6 +16,9 @@ extra:
   version:
     provider: mike
 
+plugins:
+  - mkdocstrings
+
 markdown_extensions:
   - attr_list
   - md_in_html
@@ -38,7 +41,11 @@ repo_url: https://github.com/checkers-dev/checkers
 repo_name: checkers-dev/checkers
 edit_uri: edit/main/docs/
 
+# Note: if re-organizing these links, the test_docs.py tests may have to be updated
+# as they parse this structure.
 nav:
   - Home: index.md
-  - Checks:
+  - Quickstart: quickstart.md
+  - Builtin Checks:
     - Model descriptions: checks/check_model_has_description.md
+  - Configuration: configuration.md
