@@ -49,5 +49,6 @@ nav:
   - Builtin Checks:
     - Model descriptions: checks/check_model_has_description.md
     - Something else: checks/check_something_else.md
+  - Custom Checks: custom_checks.md
   - Configuration: configuration.md
   - Reference: reference.md
