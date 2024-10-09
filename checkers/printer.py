@@ -31,7 +31,9 @@ class CheckResultRenderable:
         )
         status.append(f" {self.check_result.node_name}", style="bold blue on default")
         if self.check_result.message:
-            status.append(f" {self.check_result.message}", style="not bold default on default")
+            status.append(
+                f" {self.check_result.message}", style="not bold default on default"
+            )
         return status
 
 
@@ -42,7 +44,7 @@ class CheckerRenderable:
     def stringify_params(self) -> str:
         r = ""
         for k, v in self.checker.params.items():
-            r+= f"{k}={v} "
+            r += f"{k}={v} "
         return r
 
     def __rich__(self):

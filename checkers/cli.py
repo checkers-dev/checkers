@@ -1,5 +1,7 @@
 import os
-from click import group, pass_obj, pass_context, option
+from typing import List
+from pathlib import Path
+from click import group, pass_obj, pass_context, option, argument, Argument
 from rich import print
 from .runner import Runner
 from .collectors import CheckCollector, ModelCollector
@@ -12,7 +14,7 @@ from .config import Config, load_config
 @pass_context
 @option(
     "--config-path",
-    default=os.path.join(os.getcwd(), 'linter.toml'),
+    default=os.path.join(os.getcwd(), "linter.toml"),
     envvar="CHECKERS_CONFIG_PATH",
     help="Path to a checkers configuration file. If not supplied, will use `linter.toml` in the current working directory.",
 )
@@ -33,10 +35,17 @@ def cli(ctx, config_path, dbt_project_dir: str):
 
 
 @cli.command()
+@argument("paths", nargs=-1, type=Path)
 @pass_obj
-def run(obj: Config):
+def run(obj: Config, paths: List[Path]):
     """
-    Run the checks
+    Run the checks.
+
+    Paths supplied can be either full paths to a model, or directories containing models. The following are all valid ways to use this command.
+
+    $ checkers run models/model1.sql models/model2.sql\n
+    $ checkers run models/marts models/shared/user.sql
+
     """
 
     check_collector = CheckCollector(config=obj)
@@ -48,7 +57,7 @@ def run(obj: Config):
         printer=printer,
         config=obj,
     )
-    for _ in runner.run():
+    for _ in runner.run(*paths):
         pass
     summary = Summarizer(runner)
     exit(summary.exit_code())
@@ -66,7 +75,9 @@ def debug(obj: Config):
 
 @cli.command()
 @pass_obj
-@option('--include-disabled', default=False, is_flag=True, help="Include disabled checks")
+@option(
+    "--include-disabled", default=False, is_flag=True, help="Include disabled checks"
+)
 def collect(obj: Config, include_disabled):
     """
     Print the names of collected checks

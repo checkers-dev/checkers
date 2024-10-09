@@ -6,7 +6,7 @@ from .exceptions import SkipException, WarnException
 
 
 # These functions are just to help beginners, who can be nervous about Exceptions. They're
-# more comfortable calling functions rather than handling new keywords like `raise`, 
+# more comfortable calling functions rather than handling new keywords like `raise`,
 # `try`, and `except`
 def skip(message: str):
     raise SkipException(message)
@@ -49,7 +49,7 @@ class Checker:
 
     @property
     def enabled(self) -> bool:
-        return self.params['enabled'] is True
+        return self.params["enabled"] is True
 
     def run(self, node: Model) -> CheckResult:
         try:
