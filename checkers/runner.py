@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Iterable, List
 from .contracts import CheckResult
 from .collectors import CheckCollector, ModelCollector
@@ -19,8 +20,8 @@ class Runner:
         self.config = config
         self.results: List[CheckResult] = list()
 
-    def run(self) -> Iterable[CheckResult]:
-        for model in self.model_collector.collect():
+    def run(self, *paths: List[Path]) -> Iterable[CheckResult]:
+        for model in self.model_collector.collect(*paths):
             for check in self.check_collector.collect():
                 res = check.run(model)
                 self.results.append(res)

@@ -1,4 +1,6 @@
+from pathlib import Path
 from unittest.mock import MagicMock
+from checkers import Model
 from checkers.checks import check_model_has_description
 from checkers.config import Config
 from checkers.collectors import CheckCollector, ModelCollector
@@ -30,8 +32,8 @@ def test_check_collector_filters_disabled_checks(config: Config):
     def check_two(model):
         pass
 
-    check_one.params = {'enabled': False}
-    check_two.params = {'enabled': True}
+    check_one.params = {"enabled": False}
+    check_two.params = {"enabled": True}
 
     check1 = Checker(check=check_one, config=config)
     check2 = Checker(check=check_two, config=config)
@@ -48,3 +50,40 @@ def test_model_collector(config: Config):
     collector = ModelCollector(config=config)
     models = collector.collect()
     assert len(models) > 0
+
+
+# Note that the directories used in the paths here need to actually exist on the filesystem.
+# Otherwise the match_path will not identify the checked paths as potentially being directories.
+def test_model_collector_match_subpath(config):
+    collector = ModelCollector(config=config)
+    assert collector.match_path(Path("models/test.sql"), [Path("models/test.sql")])
+    assert collector.match_path(Path("models/test.sql"), [Path("models/")])
+    assert not collector.match_path(Path("models/test.sql"), [Path("models/other")])
+    assert not collector.match_path(Path("models/test.sql"), [Path("models/other.sql")])
+    assert collector.match_path(
+        Path("models/example/test.sql"), [Path("models/example/test.sql")]
+    )
+    assert collector.match_path(
+        Path("models/example/test.sql"), [Path("models/example/")]
+    )
+
+
+def test_model_collector_with_filepaths(config: Config, model: Model):
+    collector = ModelCollector(config=config)
+    m1 = model.model_copy(update={"original_file_path": "models/example/model1.sql"})
+    m2 = model.model_copy(update={"original_file_path": "models/example/model2.sql"})
+    m3 = model.model_copy(update={"original_file_path": "models/model3.sql"})
+    m4 = model.model_copy(update={"original_file_path": "models/model4.sql"})
+    collector.collect_all_models = MagicMock()
+    collector.collect_all_models.return_value = [m1, m2, m3, m4]
+    assert collector.collect() == [m1, m2, m3, m4]
+    assert collector.collect(Path("models")) == [m1, m2, m3, m4]
+    assert collector.collect(Path("models/example")) == [m1, m2]
+    assert collector.collect(Path("models/example"), Path(m3.original_file_path)) == [
+        m1,
+        m2,
+        m3,
+    ]
+    assert collector.collect(
+        Path(m4.original_file_path), Path(m3.original_file_path)
+    ) == [m3, m4]

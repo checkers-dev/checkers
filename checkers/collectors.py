@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+from pathlib import Path
 from typing import List
 from types import ModuleType
 from checkers import checks
@@ -54,10 +55,37 @@ class ModelCollector:
             data = Manifest(**json.load(fh))
         return data
 
-    def collect(self) -> List[Model]:
+    def collect_all_models(self) -> List[Model]:
         manifest = self.load_manifest(self.config.manifest_path)
         results = list()
         for _, v in manifest.nodes.items():
             if v["resource_type"] == "model":
                 results.append(Model(**v, manifest=manifest))
         return results
+
+    def match_path(self, path: Path, others: List[Path]):
+        """
+        Check if `path` is either contained in `others`, or whether
+        `other` contains a directory that contains `path`
+        """
+
+        for p in others:
+            if path == p:
+                return True
+            if p.is_dir():
+                if p in path.parents:
+                    return True
+        else:
+            return False
+
+    def collect(self, *paths: List[Path]) -> List[Model]:
+        all_models = self.collect_all_models()
+        if not paths:
+            return all_models
+        else:
+            return list(
+                filter(
+                    lambda p: self.match_path(Path(p.original_file_path), paths),
+                    all_models,
+                )
+            )
