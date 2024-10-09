@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Dict
 from .contracts import CheckResult, CheckResultStatus, Model
 from .config import Config
 
@@ -7,9 +7,25 @@ class Checker:
     def __init__(self, check: Callable, config: Config):
         self.check = check
         self.config = config
+        self._params = dict()
 
     def __repr__(self):
         return f"<Checker {self.check.__name__}>"
+
+    def build_params(self):
+        params = {"enabled": True}
+        default_params = getattr(self.check, "params", dict())
+        override_params = self.config.checks.get(self.check.__name__, dict())
+        params.update(default_params)
+        params.update(override_params)
+        self._params = params
+        return self._params
+
+    @property
+    def params(self) -> Dict:
+        if not self._params:
+            self.build_params()
+        return self._params
 
     def run(self, node: Model) -> CheckResult:
         try:

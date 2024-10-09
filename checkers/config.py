@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict, Any
 import os
 import toml
 from pydantic import BaseModel, ValidationError
@@ -8,6 +8,7 @@ from .exceptions import ConfigFileNotFoundException, ConfigFileInvalid
 class Config(BaseModel):
     dbt_project_dir: str = os.getcwd()
     api_host: str = "https://www.getcheckers.com/api"
+    checks: Dict[str, Dict[str, Any]] = dict()
 
     @property
     def manifest_path(self):
