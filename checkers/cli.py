@@ -66,14 +66,15 @@ def debug(obj: Config):
 
 @cli.command()
 @pass_obj
-def collect(obj: Config):
+@option('--include-disabled', default=False, is_flag=True, help="Include disabled checks")
+def collect(obj: Config, include_disabled):
     """
     Print the names of collected checks
     """
 
     collector = CheckCollector(config=obj)
     printer = Printer(config=obj)
-    for check in collector.collect():
+    for check in collector.collect(include_disabled=include_disabled):
         printer.print(CheckerRenderable(check))
 
 
