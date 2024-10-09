@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock
 from checkers.checks import check_model_has_description
 from checkers.config import Config
 from checkers.collectors import CheckCollector, ModelCollector
@@ -36,9 +37,11 @@ def test_check_collector_filters_disabled_checks(config: Config):
     check2 = Checker(check=check_two, config=config)
 
     collector = CheckCollector(config=config)
-    collector.collect_all_checks = lambda: [check1, check2]
+    collector.collect_all_checks = MagicMock()
+    collector.collect_all_checks.return_value = [check1, check2]
     assert collector.collect() == [check2]
     assert collector.collect(include_disabled=True) == [check1, check2]
+    collector.collect_all_checks.assert_called()
 
 
 def test_model_collector(config: Config):
