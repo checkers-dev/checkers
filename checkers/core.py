@@ -1,3 +1,4 @@
+import inspect
 from typing import Callable, Dict
 from .contracts import CheckResult, CheckResultStatus, Model
 from .config import Config
@@ -20,6 +21,13 @@ class Checker:
         params.update(override_params)
         self._params = params
         return self._params
+
+    def build_args(self, node: Model):
+        args = {"model": node}
+        signature = inspect.signature(self.check)
+        if "params" in signature.parameters:
+            args.update(params=self.params)
+        return args
 
     @property
     def params(self) -> Dict:

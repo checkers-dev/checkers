@@ -55,3 +55,23 @@ def test_checker_with_override_params(config: Config):
     assert checker.params["p1"] is 2
     assert checker.params["p2"] is 3
     assert len(checker.params) == 3
+
+
+def test_checker_build_args_with_default_args(config: Config, model):
+    def check_something(model):
+        pass
+
+    checker = Checker(config=config, check=check_something)
+    args = checker.build_args(node=model)
+    assert args["model"] == model
+
+
+def test_checker_build_args_with_params(config: Config, model):
+    def check_something(model, params):
+        pass
+
+    check_something.params = {"p1": "testing"}
+    checker = Checker(config=config, check=check_something)
+    args = checker.build_args(node=model)
+    assert args["model"] == model
+    assert args["params"]["p1"] == "testing"
