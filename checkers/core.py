@@ -2,6 +2,7 @@ import inspect
 from typing import Callable, Dict
 from .contracts import CheckResult, CheckResultStatus, Model
 from .config import Config
+from .exceptions import SkipException, WarnException
 
 
 class Checker:
@@ -47,6 +48,12 @@ class Checker:
             message = None
         except AssertionError as err:
             status = CheckResultStatus.failure
+            message = str(err)
+        except WarnException as err:
+            status = CheckResultStatus.warning
+            message = str(err)
+        except SkipException as err:
+            status = CheckResultStatus.skipped
             message = str(err)
         except Exception as err:
             status = CheckResultStatus.error

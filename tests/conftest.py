@@ -13,6 +13,7 @@ from checkers.runner import Runner
 from checkers.core import Checker
 from checkers.printer import Printer
 from checkers.config import Config
+from checkers.exceptions import WarnException, SkipException
 from checkers import config as config_module
 
 
@@ -37,6 +38,20 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "integration" in item.keywords:
             item.add_marker(skip_integration)
+
+
+@fixture
+def warning_check() -> Callable:
+    def check(model):
+        raise WarnException("Warning")
+    return check
+
+
+@fixture
+def skipped_check() -> Callable:
+    def check(model):
+        raise SkipException("Skipped")
+    return check
 
 
 @fixture

@@ -23,6 +23,20 @@ def test_checker_with_error_check(error_check, model, config):
     assert "division by zero" in res.message
 
 
+def test_checker_with_warning_check(warning_check, model, config):
+    checker = Checker(check=warning_check, config=config)
+    res = checker.run(model)
+    assert res.status == CheckResultStatus.warning
+    assert "Warning" in res.message
+
+
+def test_checker_with_skipped_check(skipped_check, model, config):
+    checker = Checker(check=skipped_check, config=config)
+    res = checker.run(model)
+    assert res.status == CheckResultStatus.skipped
+    assert "Skipped" in res.message
+
+
 def test_checker_with_default_params(config):
     def check_something(model):
         pass
