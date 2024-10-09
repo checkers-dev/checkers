@@ -120,7 +120,7 @@ def model_collector(model, config):
 
 @fixture
 def check_collector(passing_check, config):
-    checker = Checker(check=passing_check)
+    checker = Checker(check=passing_check, config=config)
 
     class MockCheckCollector(CheckCollector):
         def collect(self) -> List[Checker]:
@@ -155,21 +155,21 @@ def summary(runner):
 
 
 @fixture
-def check_result_passing(passing_check, model):
-    checker = Checker(check=passing_check)
+def check_result_passing(passing_check, model, config):
+    checker = Checker(check=passing_check, config=config)
     res = checker.run(model)
     return res
 
 
 @fixture
-def check_result_failure(failing_check, model):
-    checker = Checker(check=failing_check)
+def check_result_failure(failing_check, model, config):
+    checker = Checker(check=failing_check, config=config)
     res = checker.run(model)
     return res
 
 
 @fixture
-def check_result_error(error_check, model):
-    checker = Checker(check=error_check)
+def check_result_error(error_check, model, config):
+    checker = Checker(check=error_check, config=config)
     res = checker.run(model)
     return res

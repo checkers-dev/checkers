@@ -1,10 +1,12 @@
 from typing import Callable
 from .contracts import CheckResult, CheckResultStatus, Model
+from .config import Config
 
 
 class Checker:
-    def __init__(self, check: Callable):
+    def __init__(self, check: Callable, config: Config):
         self.check = check
+        self.config = config
 
     def __repr__(self):
         return f"<Checker {self.check.__name__}>"

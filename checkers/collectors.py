@@ -16,7 +16,7 @@ class CheckCollector:
     def collect(self) -> List[Checker]:
         builtin_checks = self.collect_builtin_checks()
         builtin_checks.extend(self.collect_custom_lint_checks())
-        return [Checker(check=c) for c in builtin_checks]
+        return [Checker(check=c, config=self.config) for c in builtin_checks]
 
     def collect_custom_lint_checks(self):
         if "linter.py" in os.listdir(self.config.dbt_project_dir):
