@@ -22,4 +22,6 @@ def check_something_else(model: Model):
     assert True
 
 
-check_something_else.params = {"enabled": False}
+check_something_else.params = {
+    'enabled': False
+}

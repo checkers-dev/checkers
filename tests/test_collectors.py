@@ -1,6 +1,7 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 from checkers import Model
+from unittest.mock import MagicMock
 from checkers.checks import check_model_has_description
 from checkers.config import Config
 from checkers.collectors import CheckCollector, ModelCollector
@@ -32,8 +33,8 @@ def test_check_collector_filters_disabled_checks(config: Config):
     def check_two(model):
         pass
 
-    check_one.params = {"enabled": False}
-    check_two.params = {"enabled": True}
+    check_one.params = {'enabled': False}
+    check_two.params = {'enabled': True}
 
     check1 = Checker(check=check_one, config=config)
     check2 = Checker(check=check_two, config=config)
