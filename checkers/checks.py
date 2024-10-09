@@ -13,5 +13,10 @@ check_model_has_description.params = {
     'minimum_description_words': 4
 }
 
+
 def check_something_else(model: Model):
     assert True
+
+check_something_else.params = {
+    'enabled': False
+}

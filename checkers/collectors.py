@@ -13,10 +13,17 @@ class CheckCollector:
     def __init__(self, config: Config):
         self.config = config
 
-    def collect(self) -> List[Checker]:
+    def collect_all_checks(self) -> List[Checker]:
         builtin_checks = self.collect_builtin_checks()
         builtin_checks.extend(self.collect_custom_lint_checks())
         return [Checker(check=c, config=self.config) for c in builtin_checks]
+
+    def collect(self, include_disabled=False) -> List[Checker]:
+        all_checks = self.collect_all_checks()
+        if include_disabled:
+            return all_checks
+        else:
+            return list(filter(lambda c: c.enabled, all_checks))
 
     def collect_custom_lint_checks(self):
         if "linter.py" in os.listdir(self.config.dbt_project_dir):

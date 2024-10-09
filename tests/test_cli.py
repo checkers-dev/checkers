@@ -31,6 +31,16 @@ def test_cli_collect(config: Config):
     params.extend(['collect'])
     res = runner.invoke(cli, params)
     assert res.exit_code == 0
+    assert 'enabled=False' not in res.output
+
+
+def test_cli_collect_disabled(config: Config):
+    runner = CliRunner()
+    params = default_params(config)
+    params.extend(['collect', '--include-disabled'])
+    res = runner.invoke(cli, params)
+    assert res.exit_code == 0
+    assert 'enabled=True' in res.output
 
 
 def test_cli_init(tmpdir):
