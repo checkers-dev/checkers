@@ -14,6 +14,12 @@ Install the `checkers` command line interface with pip.
 pip install checkers-cli
 ```
 
+To view the documentation for all available commands, use the `--help` flag.
+
+```
+checkers --help
+```
+
 ## Quickstart
 
 Navigate to your dbt project's directory. This should be a folder that contains a `dbt_project.yml` file.
