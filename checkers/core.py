@@ -5,6 +5,17 @@ from .config import Config
 from .exceptions import SkipException, WarnException
 
 
+# These functions are just to help beginners, who can be nervous about Exceptions. They're
+# more comfortable calling functions rather than handling new keywords like `raise`, 
+# `try`, and `except`
+def skip(message: str):
+    raise SkipException(message)
+
+
+def warn(message: str):
+    raise WarnException(message)
+
+
 class Checker:
     def __init__(self, check: Callable, config: Config):
         self.check = check

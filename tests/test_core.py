@@ -1,6 +1,20 @@
-from checkers.core import Checker
+from pytest import raises
+from checkers.core import Checker, skip, warn
 from checkers.contracts import CheckResultStatus
 from checkers.config import Config
+from checkers.exceptions import SkipException, WarnException
+
+
+def test_skip():
+    with raises(SkipException) as err:
+        skip("some message")
+    assert "some message" in str(err)
+
+
+def test_warn():
+    with raises(WarnException) as err:
+        warn("some message")
+    assert "some message" in str(err)
 
 
 def test_checker_with_passing_check(passing_check, model, config):
