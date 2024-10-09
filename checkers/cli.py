@@ -7,6 +7,7 @@ from .runner import Runner
 from .collectors import CheckCollector, ModelCollector
 from .summarizer import Summarizer
 from .printer import Printer, CheckerRenderable
+from .generators import generate_config_file, generate_linter_template
 from .config import Config, load_config
 
 
@@ -93,13 +94,19 @@ def collect(obj: Config, include_disabled):
 @option(
     "--path",
     "-p",
+    type=Path,
     help="Directory to place the file. Defaults to current working directory.",
     default=os.getcwd(),
 )
 @pass_obj
-def init(obj: Config, path: str):
+def init(obj: Config, path: Path):
     """
     Create default `linter.toml` file
     """
 
-    obj.dump(os.path.join(path, "linter.toml"))
+    collector = CheckCollector(config=obj)
+    checkers = collector.collect()
+    generate_config_file(path / "linter.toml", config=obj, checkers=checkers)
+    print("Created", path / "linter.toml")
+    generate_linter_template(path / "linter.py")
+    print("Created", path / "linter.py")

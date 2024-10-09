@@ -2,7 +2,7 @@ import sys
 import os
 import json
 from pathlib import Path
-from typing import List
+from typing import List, Callable
 from types import ModuleType
 from checkers import checks
 from .core import Checker
@@ -26,7 +26,7 @@ class CheckCollector:
         else:
             return list(filter(lambda c: c.enabled, all_checks))
 
-    def collect_custom_lint_checks(self):
+    def collect_custom_lint_checks(self) -> List[Callable]:
         if "linter.py" in os.listdir(self.config.dbt_project_dir):
             sys.path.append(self.config.dbt_project_dir)
             import linter
@@ -35,14 +35,14 @@ class CheckCollector:
         else:
             return list()
 
-    def collect_checks_from_module(self, module: ModuleType):
+    def collect_checks_from_module(self, module: ModuleType) -> List[Callable]:
         results = list()
         for k, v in vars(module).items():
             if k.startswith("check") and callable(v):
                 results.append(v)
         return results
 
-    def collect_builtin_checks(self):
+    def collect_builtin_checks(self) -> List[Checker]:
         return self.collect_checks_from_module(checks)
 
 
