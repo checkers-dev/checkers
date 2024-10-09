@@ -89,6 +89,8 @@ def model(manifest):
         resource_type="model",
         manifest=manifest,
         original_file_path="models/test/test.sql",
+        tags=list(),
+        meta=dict(),
         fqn=["prod", "core", "test.sql"],
     )
 

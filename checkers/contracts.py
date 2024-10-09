@@ -1,4 +1,4 @@
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Any
 import datetime as dt
 from enum import Enum
 from pydantic import BaseModel
@@ -78,6 +78,16 @@ class Model(BaseModel):
     fqn: List[str]
     """
     An array containing the fully qualified database name of the model
+    """
+
+    meta: Dict[str, Any]
+    """
+    The meta config property of the model
+    """
+
+    tags: List[str]
+    """
+    The tags of the model
     """
 
     manifest: Manifest
