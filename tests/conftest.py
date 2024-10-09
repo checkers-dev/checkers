@@ -41,7 +41,7 @@ def pytest_collection_modifyitems(config, items):
 
 @fixture
 def failing_check() -> Callable:
-    def check(node):
+    def check(model):
         assert False, "This failed"
 
     return check
@@ -49,7 +49,7 @@ def failing_check() -> Callable:
 
 @fixture
 def passing_check() -> Callable:
-    def check(node):
+    def check(model):
         return
 
     return check
@@ -57,7 +57,7 @@ def passing_check() -> Callable:
 
 @fixture
 def error_check() -> Callable:
-    def check(node):
+    def check(model):
         return 1 / 0
 
     return check
@@ -120,7 +120,7 @@ def model_collector(model, config):
 
 @fixture
 def check_collector(passing_check, config):
-    checker = Checker(check=passing_check)
+    checker = Checker(check=passing_check, config=config)
 
     class MockCheckCollector(CheckCollector):
         def collect(self) -> List[Checker]:
@@ -155,21 +155,21 @@ def summary(runner):
 
 
 @fixture
-def check_result_passing(passing_check, model):
-    checker = Checker(check=passing_check)
+def check_result_passing(passing_check, model, config):
+    checker = Checker(check=passing_check, config=config)
     res = checker.run(model)
     return res
 
 
 @fixture
-def check_result_failure(failing_check, model):
-    checker = Checker(check=failing_check)
+def check_result_failure(failing_check, model, config):
+    checker = Checker(check=failing_check, config=config)
     res = checker.run(model)
     return res
 
 
 @fixture
-def check_result_error(error_check, model):
-    checker = Checker(check=error_check)
+def check_result_error(error_check, model, config):
+    checker = Checker(check=error_check, config=config)
     res = checker.run(model)
     return res

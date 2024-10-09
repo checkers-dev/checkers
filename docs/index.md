@@ -4,7 +4,7 @@ Checkers is an extendable dbt linter that scans your dbt project and alerts you 
 
 By _extendable_, we mean that we want to make it easy to define **your own** best practices. This makes it possible to validate that your team's dbt projects follow the standards you decide, without needing to completely refactor your project to a new system. We also provide numerous "out of the box" checks that are aligned with dbt lab's recommendations, so that you don't need to re-invent the wheel either.
 
-Checkers is easy to integrate with any CI system, so that changes to your project that which introduce new issues are automatically flagged, and potentially blocked. It's simple to use `checkers` with pre-commit, GitHub actions, or any other CI system you're using.
+Checkers is easy to integrate with any CI system, so that changes to your project which introduce new issues are automatically flagged, and potentially blocked. It's simple to use `checkers` with pre-commit, GitHub actions, or any other CI system you're using.
 
 ## Installation
 

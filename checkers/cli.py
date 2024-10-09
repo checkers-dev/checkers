@@ -4,7 +4,7 @@ from rich import print
 from .runner import Runner
 from .collectors import CheckCollector, ModelCollector
 from .summarizer import Summarizer
-from .printer import Printer
+from .printer import Printer, CheckerRenderable
 from .config import Config, load_config
 
 
@@ -12,7 +12,7 @@ from .config import Config, load_config
 @pass_context
 @option(
     "--config-path",
-    default=None,
+    default=os.path.join(os.getcwd(), 'linter.toml'),
     envvar="CHECKERS_CONFIG_PATH",
     help="Path to a checkers configuration file. If not supplied, will use `linter.toml` in the current working directory.",
 )
@@ -27,6 +27,8 @@ def cli(ctx, config_path, dbt_project_dir: str):
     An extensible dbt linter
     """
 
+    if not os.path.exists(config_path):
+        config_path = None
     ctx.obj = load_config(path=config_path, dbt_project_dir=dbt_project_dir)
 
 
@@ -72,7 +74,7 @@ def collect(obj: Config):
     collector = CheckCollector(config=obj)
     printer = Printer(config=obj)
     for check in collector.collect():
-        printer.print(check)
+        printer.print(CheckerRenderable(check))
 
 
 @cli.command()
