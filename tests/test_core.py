@@ -1,6 +1,20 @@
-from checkers.core import Checker
+from pytest import raises
+from checkers.core import Checker, skip, warn
 from checkers.contracts import CheckResultStatus
 from checkers.config import Config
+from checkers.exceptions import SkipException, WarnException
+
+
+def test_skip():
+    with raises(SkipException) as err:
+        skip("some message")
+    assert "some message" in str(err)
+
+
+def test_warn():
+    with raises(WarnException) as err:
+        warn("some message")
+    assert "some message" in str(err)
 
 
 def test_checker_with_passing_check(passing_check, model, config):
@@ -21,6 +35,20 @@ def test_checker_with_error_check(error_check, model, config):
     res = checker.run(model)
     assert res.status == CheckResultStatus.error
     assert "division by zero" in res.message
+
+
+def test_checker_with_warning_check(warning_check, model, config):
+    checker = Checker(check=warning_check, config=config)
+    res = checker.run(model)
+    assert res.status == CheckResultStatus.warning
+    assert "Warning" in res.message
+
+
+def test_checker_with_skipped_check(skipped_check, model, config):
+    checker = Checker(check=skipped_check, config=config)
+    res = checker.run(model)
+    assert res.status == CheckResultStatus.skipped
+    assert "Skipped" in res.message
 
 
 def test_checker_with_default_params(config):
