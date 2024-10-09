@@ -1,7 +1,5 @@
 # Custom Checks
 
-A key goal of Checkers is to make it easy to write custom checks for your dbt project.
-
 This section of the documentation describes how to create a custom check which validates all of the models in a dbt project define an `owner` property in their meta configuration. Ie, all models should have a config block similar to the following.
 
 ```sql
@@ -86,9 +84,8 @@ AssertionError: Description is too short - 14 letters
 
 Let's take another look at the `check_model_has_owner` we just created. Notice that:
 
-The check uses a single assert statement, `assert 'owner' in model.config`. If the `model.config` does _not_ contain an owner, then the expression `'owner' in model.config` will evaluate to `False`. So the assert statement will raise an error, and Checkers will log the model that is missing an owner definition.
-
-Additionally, the assert statement specified the string `"Model must specify an owner field in its meta block"`, which is the error message presented to the user when a check fail.
+- The check uses a single assert statement, `assert 'owner' in model.config`. If the `model.config` does _not_ contain an owner, then the expression `'owner' in model.config` will evaluate to `False`. So the assert statement will raise an error, and Checkers will log the model that is missing an owner definition.
+- Additionally, the assert statement specified the string `"Model must specify an owner field in its meta block"`, which is the error message presented to the user when a check fail.
 
 So if we run this check against a model that does not specify an owner, we'll see output similar to the following.
 
