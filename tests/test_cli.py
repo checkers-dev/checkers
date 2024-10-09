@@ -14,7 +14,7 @@ def test_cli_run(config: Config):
     params = default_params(config)
     params.extend(['run'])
     res = runner.invoke(cli, params)
-    assert res.exit_code == 0
+    assert res.exit_code == 0, res.output
 
 
 def test_cli_debug(config: Config):
