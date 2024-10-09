@@ -41,7 +41,7 @@ def pytest_collection_modifyitems(config, items):
 
 @fixture
 def failing_check() -> Callable:
-    def check(node):
+    def check(model):
         assert False, "This failed"
 
     return check
@@ -49,7 +49,7 @@ def failing_check() -> Callable:
 
 @fixture
 def passing_check() -> Callable:
-    def check(node):
+    def check(model):
         return
 
     return check
@@ -57,7 +57,7 @@ def passing_check() -> Callable:
 
 @fixture
 def error_check() -> Callable:
-    def check(node):
+    def check(model):
         return 1 / 0
 
     return check

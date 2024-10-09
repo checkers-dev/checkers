@@ -35,9 +35,14 @@ class Checker:
             self.build_params()
         return self._params
 
+    @property
+    def enabled(self) -> bool:
+        return self.params['enabled'] is True
+
     def run(self, node: Model) -> CheckResult:
         try:
-            self.check(node)
+            args = self.build_args(node=node)
+            self.check(**args)
             status = CheckResultStatus.passing
             message = None
         except AssertionError as err:

@@ -3,6 +3,7 @@ from rich.console import Console, RenderableType
 from rich.text import Text
 from .contracts import CheckResult, CheckResultStatus
 from .config import Config
+from .core import Checker
 
 
 class CheckResultRenderable:
@@ -29,7 +30,23 @@ class CheckResultRenderable:
             " " + self.check_result.check_name, style="not bold default on default"
         )
         status.append(f" {self.check_result.node_name}", style="bold blue on default")
+        if self.check_result.message:
+            status.append(f" {self.check_result.message}", style="not bold default on default")
         return status
+
+
+class CheckerRenderable:
+    def __init__(self, checker: Checker):
+        self.checker = checker
+
+    def stringify_params(self) -> str:
+        r = ""
+        for k, v in self.checker.params.items():
+            r+= f"{k}={v} "
+        return r
+
+    def __rich__(self):
+        return self.checker.check.__name__ + " " + self.stringify_params()
 
 
 class Printer:
