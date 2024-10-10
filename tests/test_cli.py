@@ -17,7 +17,7 @@ def default_params(config: Config):
 def test_cli_run(config: Config):
     runner = CliRunner()
     params = default_params(config)
-    params.extend(["run"])
+    params.extend(["run", "models/example/my_first_dbt_model.sql"])
     res = runner.invoke(cli, params)
     assert res.exit_code == 0, res.output
 

@@ -65,6 +65,11 @@ class Manifest(BaseModel):
             if v["resource_type"] == "model"
         }
 
+    def get_model_by_name(self, name: str) -> Optional["Model"]:
+        for k, v in self.models.items():
+            if v.name == name:
+                return v
+
 
 class Node(BaseModel):
     unique_id: str
