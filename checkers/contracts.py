@@ -43,18 +43,30 @@ class CheckResult(BaseModel):
 
 class Manifest(BaseModel):
     nodes: Dict[str, Dict]
-
-
-class Model(BaseModel):
     """
-    Represents a model in a dbt project
+    Dictionary mapping node_id's to node details.
     """
 
-    name: str
+    parent_map: Dict[str, List[str]]
     """
-    The name of the model
+    Dictionary mapping node_id's to nodes directly upstream
     """
 
+    child_map: Dict[str, List[str]]
+    """
+    Dictionary mapping node_id's to nodes directly downstream
+    """
+
+    @property
+    def models(self) -> Dict[str, "Model"]:
+        return {
+            k: Model(**v, manifest=self)
+            for k, v in self.nodes.items()
+            if v["resource_type"] == "model"
+        }
+
+
+class Node(BaseModel):
     unique_id: str
     """
     The unique id of the model
@@ -62,7 +74,40 @@ class Model(BaseModel):
 
     resource_type: str
     """
-    The resource type. Always `model`.
+    The resource type. Can be `model`, `test`, `seed`, etc.
+    """
+
+    manifest: Manifest
+    """
+    The Manifest object. Useful for querying the node's parents, children, etc.
+    """
+
+    @property
+    def child_map(self):
+        return self.manifest.child_map[self.unique_id]
+
+    @property
+    def parent_map(self):
+        return self.manifest.parent_map[self.unique_id]
+
+
+class Test(Node):
+    __test__ = False  # Don't break pytest
+
+    manifest: Manifest
+    """
+    The Manifest object. Useful for querying the node's parents, children, etc.
+    """
+
+
+class Model(Node):
+    """
+    Represents a model in a dbt project
+    """
+
+    name: str
+    """
+    The name of the model
     """
 
     description: Optional[str] = None
@@ -90,7 +135,11 @@ class Model(BaseModel):
     The tags of the model
     """
 
-    manifest: Manifest
-    """
-    The Manifest object. Useful for querying the models' parents, children, etc.
-    """
+    @property
+    def tests(self) -> List[Test]:
+        results = []
+        for c in self.child_map:
+            if self.manifest.nodes[c]["resource_type"] == "test":
+                d = self.manifest.nodes[c]
+                results.append(Test(**d, manifest=self.manifest))
+        return results

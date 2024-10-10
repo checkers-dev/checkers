@@ -12,14 +12,17 @@ def test_checks_have_docs_page(config, checkers_root):
 
     # Collect doc site pages for each check
     doc_pages = os.listdir(os.path.join(checkers_root, "docs", "checks"))
-    doc_page_names = [d.replace(".md", "") for d in doc_pages]
+    doc_page_names = [d.replace(".md", "") for d in doc_pages][
+        1:
+    ]  # skip the index page
 
     # Collect site pages defined in mkdocs.yml
     site_pages = yaml.load(
         open(os.path.join(checkers_root, "mkdocs.yml"), "r"), Loader=yaml.SafeLoader
     )
     site_doc_pages = [
-        list(v.values())[0] for v in site_pages["nav"][1]["Builtin Checks"]
+        list(v.values())[0]
+        for v in site_pages["nav"][1]["Builtin Checks"][1:]  # skip the index page
     ]
     site_doc_page_names = [d.split("/")[-1].replace(".md", "") for d in site_doc_pages]
 
