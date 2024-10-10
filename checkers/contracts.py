@@ -91,6 +91,16 @@ class Node(BaseModel):
         return self.manifest.parent_map[self.unique_id]
 
 
+class Column(BaseModel):
+    name: str
+    description: Optional[str] = None
+    meta: dict
+    data_type: Optional[str]
+    constraints: List
+    quote: Optional[bool]
+    tags: List[str]
+
+
 class Test(Node):
     __test__ = False  # Don't break pytest
 
@@ -98,6 +108,24 @@ class Test(Node):
     """
     The Manifest object. Useful for querying the node's parents, children, etc.
     """
+
+    column_name: Optional[str] = None
+    """
+    The name of the column this test is defined on, if it's a column-level test
+    """
+
+    test_metadata: Dict[str, Any] = dict()
+    """
+    Additional data about the test, such as its name, namespace, and arguments specified
+    """
+
+    @property
+    def test_name(self):
+        """
+        The name of the test, eg `unique`, `not_null`, etc
+        """
+
+        return self.test_metadata.get("name")
 
 
 class Model(Node):
@@ -113,6 +141,11 @@ class Model(Node):
     description: Optional[str] = None
     """
     The model's description
+    """
+
+    columns: Dict[str, Column]
+    """
+    Dictionary containing details about each column defined in the model's yaml file
     """
 
     original_file_path: str
