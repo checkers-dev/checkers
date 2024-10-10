@@ -46,6 +46,8 @@ edit_uri: edit/main/docs/
 # as they parse this structure.
 nav:
   - Home: index.md
+  - Install: installation.md
+  - Quickstart: quickstart.md
   - Builtin Checks:
     - List of Builtin Checks: checks/_index.md
     - Model descriptions: checks/check_model_has_description.md

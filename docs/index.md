@@ -1,59 +1,32 @@
 # Checkers
 
-Checkers is an extendable dbt linter that scans your dbt project and alerts you of any misalignments with your team's best practices. It's similar to other tools like [dbt-project-evaluator](https://github.com/dbt-labs/dbt-project-evaluator/tree/main) (created by dbt-labs), among others.
+Checkers is a dbt linter that's incrementally adoptable, extendable, and comes with "batteries included."
 
-By _extendable_, we mean that we want to make it easy to define **your own** best practices. This makes it possible to validate that your team's dbt projects follow the standards you decide, without needing to completely refactor your project to a new system. We also provide numerous "out of the box" checks that are aligned with dbt lab's recommendations, so that you don't need to re-invent the wheel either.
+In short, Checkers scans your dbt project and alerts you of any misalignments with your team's best practices. It's similar to other tools like [dbt-project-evaluator](https://github.com/dbt-labs/dbt-project-evaluator/tree/main) from dbt-labs, [dbt-score](https://github.com/PicnicSupermarket/dbt-score) from Picnic, among others.
 
-We also want checkers to be _incrementally adoptable_. This allows you to start adding requirements to some parts of your dbt project, while only warning about issues in other parts. For example, you might require that all tables in the "core" contain documentation, but tables in the data marts do not.
+Checkers is easy to integrate with any CI system, so that changes to your project which introduce new issues are automatically flagged, and potentially blocked. It's simple to use `checkers` with pre-commit, GitHub actions, or any other CI system.
 
-Checkers is easy to integrate with any CI system, so that changes to your project which introduce new issues are automatically flagged, and potentially blocked. It's simple to use `checkers` with pre-commit, GitHub actions, or any other CI system you're using.
+## Batteries included
 
-## Installation
+Checkers comes with numerous checks built in, so that you don't need to reinvent the wheel. We're working towards equivalence with dbt-project evaluator, and we're frequently adding new checks as dbt evolves.
 
-Install the `checkers` command line interface with pip.
+You can see the full list of built-in checks [here](checks/_index).
 
-```
-pip install checkers-cli
-```
+## Extendable
 
-To view the documentation for all available commands, use the `--help` flag.
+Checkers is also highly customizable to your own team's way of working. We make it easy to add new checks using Python, and we also support modern code completion capabilities, making it fast and easy for your team to adopt new checks as your project grows.
 
-```
-checkers --help
-```
+Using your own checks also means you can standardize your team's dbt projects around a coherent way of working without having to migrate to a completely new system. This provides your team with the benefits of standardization, without imposing aesthetic details like whether you use a `sources` directory or a `staging` directory.
 
-## Quickstart
+To learn more about writing custom checks, you can see [the user guide](checks/custom_checks)
 
-Navigate to your dbt project's directory. This should be a folder that contains a `dbt_project.yml` file.
+## Incrementally adoptable
 
-```
-cd path/to/dbt/project
-```
-
-
-Parse your dbt project to generate a `manifest.json` artifact. (Many other dbt commands generate a `manifest.json`, including `dbt build`, `dbt test`, etc. But we recommend using `dbt parse` as it usually takes just a few seconds).
-
-```
-dbt parse
-```
-
-Run the checkers.
-
-```
-checkers run
-```
-
-The results of the check will print to your console, and look similar to the following.
-
-```
-PASS   check_model_has_description my_first_dbt_model
-PASS   check_model_has_description my_second_dbt_model
-```
+Checkers can be incrementally added into any existing dbt project. This allows you to start adding useful requirements into your codebase and turning on CI checks immediately. This also ensures you prevent drift as you bring the project up to your team's best practices.
 
 ## Next steps
 
-- Review the list of [builtin checks](/docs/checks/check_model_has_description)
-- Learn how to enable, disable, and customize the builtin checks via the [configuration file](/docs/configuration)
-- Learn how to write [custom checks](/docs/custom_checks)
-
-For any questions or to get help, please open an issue on our [GitHub repo](https://github.com/checkers-dev/checkers).
+- [Install the checkers-cli](installation)
+- [Review the quickstart to run your first checks](quickstart)
+- [Browse the full list of builtin checks](docs/checks/_index)
+- [Learn how to write custom checks](custom_checks)
