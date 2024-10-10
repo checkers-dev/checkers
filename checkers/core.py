@@ -1,8 +1,8 @@
 import inspect
 from typing import Callable, Dict
-from .contracts import CheckResult, CheckResultStatus, Model
+from .contracts import CheckResult, CheckResultStatus, Node
 from .config import Config
-from .exceptions import SkipException, WarnException
+from .exceptions import SkipException, WarnException, InvalidCheckException
 
 
 # These functions are just to help beginners, who can be nervous about Exceptions. They're
@@ -34,12 +34,25 @@ class Checker:
         self._params = params
         return self._params
 
-    def build_args(self, node: Model):
-        args = {"model": node}
-        signature = inspect.signature(self.check)
-        if "params" in signature.parameters:
+    def signature(self):
+        sig = inspect.signature(self.check).parameters
+        return sig
+
+    def build_args(self, node: Node):
+        args = {node.resource_type: node}
+        if "params" in self.signature():
             args.update(params=self.params)
         return args
+
+    @property
+    def resource_type(self):
+        try:
+            first_param = list(self.signature().keys())[0]
+            return first_param
+        except IndexError:
+            raise InvalidCheckException(
+                "Check function specified no arguments. The first argument of a check function must specify the resource type to check"
+            )
 
     @property
     def params(self) -> Dict:
@@ -51,7 +64,7 @@ class Checker:
     def enabled(self) -> bool:
         return self.params["enabled"] is True
 
-    def run(self, node: Model) -> CheckResult:
+    def run(self, node: Node) -> CheckResult:
         try:
             args = self.build_args(node=node)
             self.check(**args)
