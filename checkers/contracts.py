@@ -1,7 +1,7 @@
 from typing import Optional, Dict, List, Any
 import datetime as dt
 from enum import Enum
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 # I think let's make the values here `pass`, `warn`, `error`, etc
@@ -42,6 +42,12 @@ class CheckResult(BaseModel):
 
 
 class Manifest(BaseModel):
+
+    raw: Dict[str, Any]
+    """
+    Dictionary containg the raw manifest details
+    """
+
     nodes: Dict[str, Dict]
     """
     Dictionary mapping node_id's to node details.
@@ -56,6 +62,10 @@ class Manifest(BaseModel):
     """
     Dictionary mapping node_id's to nodes directly downstream
     """
+
+    @property
+    def sources(self) -> Dict[str, "Source"]:
+        return {k: Source(**v, manifest=self) for k, v in self.raw["sources"].items()}
 
     @property
     def models(self) -> Dict[str, "Model"]:
@@ -133,6 +143,26 @@ class Test(Node):
         return self.test_metadata.get("name")
 
 
+class Source(Node):
+    """
+    Represents a source in a dbt project
+    """
+
+    database: str  # "dev"
+    schema_name: str = Field(alias="schema")  # "dummy_schema"
+    name: str  # "table1"
+    resource_type: str  # "source"
+    package_name: str  # "mock"
+    path: str  # "models/staging/dummy/schema.yml"
+    original_file_path: str  # "models/staging/dummy/schema.yml"
+    unique_id: str  # "source.mock.dummy.table1"
+    fqn: List[str]  # ["mock","staging","dummy","dummy","table1"]
+    source_name: str  # "dummy"
+    source_description: Optional[str] = None  # ""
+    loader: Optional[str] = None  # ""
+    identifier: Optional[str] = None  # "table1"
+
+
 class Model(Node):
     """
     Represents a model in a dbt project
@@ -172,6 +202,19 @@ class Model(Node):
     """
     The tags of the model
     """
+
+    source_names: List[List[str]] = Field(alias="sources")
+    """
+    Array containingg tuples of the sources referenced by the model.
+    """
+
+    @property
+    def sources(self) -> List[Source]:
+        results = []
+        for p in self.parent_map:
+            if p.startswith("source"):
+                results.append(self.manifest.sources[p])
+        return results
 
     @property
     def tests(self) -> List[Test]:

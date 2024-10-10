@@ -95,7 +95,7 @@ def mock_dbt_project(tmpdir_factory):
 def manifest(mock_dbt_project: Path):
     manifest_path = mock_dbt_project / "target" / "manifest.json"
     data = json.loads(manifest_path.read_text())
-    return Manifest(**data)
+    return Manifest(**data, raw=data)
 
 
 @fixture
@@ -110,6 +110,7 @@ def model(manifest):
         meta=dict(),
         fqn=["prod", "core", "test.sql"],
         columns=dict(),
+        sources=[],
     )
 
 

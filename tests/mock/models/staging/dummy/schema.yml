@@ -1,0 +1,8 @@
+sources:
+  - name: dummy
+    database: dev
+    schema: dummy_schema
+    meta:
+      external_location: "./sources/{name}.csv"
+    tables:
+      - name: table1

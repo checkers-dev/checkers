@@ -38,3 +38,13 @@ def check_model_has_primary_key_test(model: Model, params: Dict):
         raise AssertionError(
             "Missing a column that defined both a unique and not_null test"
         )
+
+
+def check_multiple_sources(model: Model):
+    """
+    Validate that a model can depend on only a single source.
+    """
+
+    assert (
+        len(model.sources) <= 1
+    ), f"Model can only depend on a single source, currently uses: {len(model.sources)}"

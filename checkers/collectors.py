@@ -52,8 +52,9 @@ class ModelCollector:
 
     def load_manifest(self, path: str) -> Manifest:
         with open(path) as fh:
-            data = Manifest(**json.load(fh))
-        return data
+            data = json.load(fh)
+            manifest = Manifest(**data, raw=data)
+        return manifest
 
     def collect_all_models(self) -> List[Model]:
         manifest = self.load_manifest(self.config.manifest_path)
