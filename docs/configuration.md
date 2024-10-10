@@ -40,7 +40,7 @@ minimum_description_length = 10
 minimum_description_words = 4
 ```
 
-For more information about the parameters available for the builtin checks, see the documentation for that specific check. For example, here's the documentation for the [`check_model_has_description`](/docs/checks/check_model_has_description).
+For more information about the parameters available for the builtin checks, see the documentation for that specific check. For example, here's the documentation for the [`check_model_has_description`](checks/check_model_has_description.md).
 
 ## Configuration Options
 

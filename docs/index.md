@@ -10,15 +10,18 @@ Checkers is easy to integrate with any CI system, so that changes to your projec
 
 Checkers comes with numerous checks built in, so that you don't need to reinvent the wheel. We're working towards equivalence with dbt-project evaluator, and we're frequently adding new checks as dbt evolves.
 
-You can see the full list of built-in checks [here](checks/_index).
+
+!!! Info
+    You can see the full list of built-in checks [here](checks/_index.md).
 
 ## Extendable
 
-Checkers is also highly customizable to your own team's way of working. We make it easy to add new checks using Python, and we also support modern code completion capabilities, making it fast and easy for your team to adopt new checks as your project grows.
+Checkers is also highly customizable to your own team's way of working. We make it easy to add new checks using Python, and we also support modern code completion capabilities, making it fast and easy for your team to adapt as your project grows.
 
 Using your own checks also means you can standardize your team's dbt projects around a coherent way of working without having to migrate to a completely new system. This provides your team with the benefits of standardization, without imposing aesthetic details like whether you use a `sources` directory or a `staging` directory.
 
-To learn more about writing custom checks, you can see [the user guide](checks/custom_checks)
+!!! Info
+    To learn more about writing custom checks, you can see [the user guide](custom_checks.md)
 
 ## Incrementally adoptable
 
@@ -26,7 +29,7 @@ Checkers can be incrementally added into any existing dbt project. This allows y
 
 ## Next steps
 
-- [Install the checkers-cli](installation)
-- [Review the quickstart to run your first checks](quickstart)
-- [Browse the full list of builtin checks](docs/checks/_index)
-- [Learn how to write custom checks](custom_checks)
+- [Install the checkers-cli](installation.md)
+- [Review the quickstart to run your first checks](quickstart.md)
+- [Browse the full list of builtin checks](checks/_index.md)
+- [Learn how to write custom checks](custom_checks.md)
