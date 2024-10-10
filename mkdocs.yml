@@ -52,6 +52,7 @@ nav:
     - List of Builtin Checks: checks/_index.md
     - Model descriptions: checks/check_model_has_description.md
     - Primary Keys: checks/check_model_has_primary_key_test.md
+    - Multiple Sources: checks/check_multiple_sources.md
   - Custom Checks: custom_checks.md
   - Configuration: configuration.md
   - Reference: reference.md
