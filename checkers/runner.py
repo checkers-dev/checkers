@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Iterable, List
 from .contracts import CheckResult
-from .collectors import CheckCollector, ModelCollector
+from .collectors import CheckCollector, NodeCollector
 from .printer import Printer, CheckResultRenderable
 from .config import Config
 
@@ -10,7 +10,7 @@ class Runner:
     def __init__(
         self,
         check_collector: CheckCollector,
-        model_collector: ModelCollector,
+        model_collector: NodeCollector,
         printer: Printer,
         config: Config,
     ):

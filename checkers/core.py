@@ -23,7 +23,7 @@ class Checker:
         self._params = dict()
 
     def __repr__(self):
-        return f"<Checker {self.check.__name__}>"
+        return f"<Checker {self.check.__name__} [{self.resource_type}]>"
 
     def build_params(self):
         params = {"enabled": True}

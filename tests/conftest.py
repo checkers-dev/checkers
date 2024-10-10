@@ -8,7 +8,7 @@ from rich.console import Console
 from checkers.clients.api_client import Client
 from checkers.summarizer import Summarizer
 from checkers.contracts import Model, Manifest
-from checkers.collectors import ModelCollector, CheckCollector
+from checkers.collectors import NodeCollector, CheckCollector
 from checkers.runner import Runner
 from checkers.core import Checker
 from checkers.printer import Printer
@@ -156,7 +156,7 @@ def checkers_root():
 
 @fixture
 def model_collector(model, config):
-    class MockModelCollector(ModelCollector):
+    class MockModelCollector(NodeCollector):
         def collect(self) -> List[Model]:
             return [model]
 

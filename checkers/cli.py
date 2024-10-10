@@ -4,7 +4,7 @@ from pathlib import Path
 from click import group, pass_obj, pass_context, option, argument, Argument
 from rich import print
 from .runner import Runner
-from .collectors import CheckCollector, ModelCollector
+from .collectors import CheckCollector, NodeCollector
 from .summarizer import Summarizer
 from .printer import Printer, CheckerRenderable
 from .generators import generate_config_file, generate_linter_template
@@ -50,7 +50,7 @@ def run(obj: Config, paths: List[Path]):
     """
 
     check_collector = CheckCollector(config=obj)
-    model_collector = ModelCollector(config=obj)
+    model_collector = NodeCollector(config=obj)
     printer = Printer(config=obj)
     runner = Runner(
         check_collector=check_collector,
