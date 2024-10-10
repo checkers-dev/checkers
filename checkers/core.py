@@ -51,7 +51,7 @@ class Checker:
             return first_param
         except IndexError:
             raise InvalidCheckException(
-                "Checks must include an argument specifying the resource type to check"
+                "Check function specified no arguments. The first argument of a check function must specify the resource type to check"
             )
 
     @property
