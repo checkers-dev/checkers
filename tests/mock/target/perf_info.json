@@ -1,33 +1,18 @@
 {
-    "path_count": 121,
-    "parsed_path_count": 2,
-    "static_analysis_path_count": 1,
-    "static_analysis_parsed_path_count": 1,
+    "path_count": 123,
+    "parsed_path_count": 0,
+    "static_analysis_path_count": 0,
+    "static_analysis_parsed_path_count": 0,
     "is_partial_parse_enabled": true,
     "is_static_analysis_enabled": true,
-    "read_files_elapsed": 0.525410041998839,
-    "load_macros_elapsed": 0.0007561660022474825,
-    "parse_project_elapsed": 0.14235704099701252,
-    "patch_sources_elapsed": 8.124996384140104e-06,
-    "process_manifest_elapsed": 0.00016375000268453732,
-    "load_all_elapsed": 0.7855817920062691,
+    "read_files_elapsed": 0.07017554200137965,
+    "load_all_elapsed": 0.16175241699966136,
     "projects": [
         {
             "project_name": "mock",
-            "elapsed": 0.14229420899937395,
-            "parsers": [
-                {
-                    "parser": "model",
-                    "elapsed": 0.08262983300664928,
-                    "parsed_path_count": 1
-                },
-                {
-                    "parser": "test",
-                    "elapsed": 0.059656290999555495,
-                    "parsed_path_count": 1
-                }
-            ],
-            "parsed_path_count": 2
+            "elapsed": 0,
+            "parsers": [],
+            "parsed_path_count": 0
         },
         {
             "project_name": "dbt_duckdb",
