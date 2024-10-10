@@ -1,6 +1,6 @@
 import inspect
 from typing import Callable, Dict
-from .contracts import CheckResult, CheckResultStatus, Model
+from .contracts import CheckResult, CheckResultStatus, Node
 from .config import Config
 from .exceptions import SkipException, WarnException, InvalidCheckException
 
@@ -38,8 +38,8 @@ class Checker:
         sig = inspect.signature(self.check).parameters
         return sig
 
-    def build_args(self, node: Model):
-        args = {"model": node}
+    def build_args(self, node: Node):
+        args = {node.resource_type: node}
         if "params" in self.signature():
             args.update(params=self.params)
         return args
@@ -64,7 +64,7 @@ class Checker:
     def enabled(self) -> bool:
         return self.params["enabled"] is True
 
-    def run(self, node: Model) -> CheckResult:
+    def run(self, node: Node) -> CheckResult:
         try:
             args = self.build_args(node=node)
             self.check(**args)
