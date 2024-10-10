@@ -42,7 +42,7 @@ class CheckCollector:
                 results.append(v)
         return results
 
-    def collect_builtin_checks(self) -> List[Checker]:
+    def collect_builtin_checks(self) -> List[Callable]:
         return self.collect_checks_from_module(checks)
 
 

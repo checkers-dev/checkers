@@ -44,6 +44,7 @@ def pytest_collection_modifyitems(config, items):
 def warning_check() -> Callable:
     def check(model):
         raise WarnException("Warning")
+
     return check
 
 
@@ -51,6 +52,7 @@ def warning_check() -> Callable:
 def skipped_check() -> Callable:
     def check(model):
         raise SkipException("Skipped")
+
     return check
 
 
@@ -107,6 +109,7 @@ def model(manifest):
         tags=list(),
         meta=dict(),
         fqn=["prod", "core", "test.sql"],
+        columns=dict(),
     )
 
 

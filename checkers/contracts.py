@@ -43,9 +43,92 @@ class CheckResult(BaseModel):
 
 class Manifest(BaseModel):
     nodes: Dict[str, Dict]
+    """
+    Dictionary mapping node_id's to node details.
+    """
+
+    parent_map: Dict[str, List[str]]
+    """
+    Dictionary mapping node_id's to nodes directly upstream
+    """
+
+    child_map: Dict[str, List[str]]
+    """
+    Dictionary mapping node_id's to nodes directly downstream
+    """
+
+    @property
+    def models(self) -> Dict[str, "Model"]:
+        return {
+            k: Model(**v, manifest=self)
+            for k, v in self.nodes.items()
+            if v["resource_type"] == "model"
+        }
 
 
-class Model(BaseModel):
+class Node(BaseModel):
+    unique_id: str
+    """
+    The unique id of the model
+    """
+
+    resource_type: str
+    """
+    The resource type. Can be `model`, `test`, `seed`, etc.
+    """
+
+    manifest: Manifest
+    """
+    The Manifest object. Useful for querying the node's parents, children, etc.
+    """
+
+    @property
+    def child_map(self):
+        return self.manifest.child_map[self.unique_id]
+
+    @property
+    def parent_map(self):
+        return self.manifest.parent_map[self.unique_id]
+
+
+class Column(BaseModel):
+    name: str
+    description: Optional[str] = None
+    meta: dict
+    data_type: Optional[str]
+    constraints: List
+    quote: Optional[bool]
+    tags: List[str]
+
+
+class Test(Node):
+    __test__ = False  # Don't break pytest
+
+    manifest: Manifest
+    """
+    The Manifest object. Useful for querying the node's parents, children, etc.
+    """
+
+    column_name: Optional[str] = None
+    """
+    The name of the column this test is defined on, if it's a column-level test
+    """
+
+    test_metadata: Dict[str, Any] = dict()
+    """
+    Additional data about the test, such as its name, namespace, and arguments specified
+    """
+
+    @property
+    def test_name(self):
+        """
+        The name of the test, eg `unique`, `not_null`, etc
+        """
+
+        return self.test_metadata.get("name")
+
+
+class Model(Node):
     """
     Represents a model in a dbt project
     """
@@ -55,19 +138,14 @@ class Model(BaseModel):
     The name of the model
     """
 
-    unique_id: str
-    """
-    The unique id of the model
-    """
-
-    resource_type: str
-    """
-    The resource type. Always `model`.
-    """
-
     description: Optional[str] = None
     """
     The model's description
+    """
+
+    columns: Dict[str, Column]
+    """
+    Dictionary containing details about each column defined in the model's yaml file
     """
 
     original_file_path: str
@@ -90,7 +168,11 @@ class Model(BaseModel):
     The tags of the model
     """
 
-    manifest: Manifest
-    """
-    The Manifest object. Useful for querying the models' parents, children, etc.
-    """
+    @property
+    def tests(self) -> List[Test]:
+        results = []
+        for c in self.child_map:
+            if self.manifest.nodes[c]["resource_type"] == "test":
+                d = self.manifest.nodes[c]
+                results.append(Test(**d, manifest=self.manifest))
+        return results
