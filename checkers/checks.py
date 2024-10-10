@@ -1,5 +1,5 @@
 from typing import Dict
-from checkers.contracts import Model
+from checkers.contracts import Model, Source
 
 
 def check_model_has_description(model: Model, params: Dict):

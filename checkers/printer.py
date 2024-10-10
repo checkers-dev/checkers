@@ -27,12 +27,15 @@ class CheckResultRenderable:
             style=f"bold bright_white on {color}",
         )
         status.append(
-            " " + self.check_result.check_name, style="not bold default on default"
+            " " + self.check_result.node_type, style="bold default on default"
         )
         status.append(f" {self.check_result.node_name}", style="bold blue on default")
+        status.append(
+            " " + self.check_result.check_name, style="not bold default on default"
+        )
         if self.check_result.message:
             status.append(
-                f" {self.check_result.message}", style="not bold default on default"
+                f" ({self.check_result.message})", style="not bold default on default"
             )
         return status
 
