@@ -80,6 +80,30 @@ def error_check() -> Callable:
     return check
 
 
+@fixture
+def model_check() -> Callable:
+    def check(model):
+        pass
+
+    return check
+
+
+@fixture
+def source_check() -> Callable:
+    def check(source):
+        pass
+
+    return check
+
+
+@fixture
+def undefined_resource_check() -> Callable:
+    def check():
+        pass
+
+    return check
+
+
 @fixture(scope="session")
 def mock_dbt_project(tmpdir_factory):
     root = tmpdir_factory.mktemp("root")

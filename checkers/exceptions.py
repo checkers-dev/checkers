@@ -1,3 +1,9 @@
+class InvalidCheckException(Exception):
+    """
+    Raised when a check function is invalid.
+    """
+
+
 class ConfigException(Exception):
     pass
 

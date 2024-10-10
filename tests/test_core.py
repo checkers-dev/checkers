@@ -2,7 +2,7 @@ from pytest import raises
 from checkers.core import Checker, skip, warn
 from checkers.contracts import CheckResultStatus
 from checkers.config import Config
-from checkers.exceptions import SkipException, WarnException
+from checkers.exceptions import SkipException, WarnException, InvalidCheckException
 
 
 def test_skip():
@@ -117,9 +117,23 @@ def test_checker_run_with_no_params(config: Config, model):
 
 def test_checker_run_with_custom_params(config: Config, model):
     def check_something(model, params):
-        assert 'p1' in params
+        assert "p1" in params
 
     check_something.params = {"p1": "testing"}
     checker = Checker(config=config, check=check_something)
     res = checker.run(node=model)
     assert res.status == CheckResultStatus.passing
+
+
+def test_checker_identifies_resource_type(
+    config, model_check, source_check, undefined_resource_check
+):
+    check = Checker(check=model_check, config=config)
+    assert check.resource_type == "model"
+
+    check = Checker(check=source_check, config=config)
+    assert check.resource_type == "source"
+
+    check = Checker(check=undefined_resource_check, config=config)
+    with raises(InvalidCheckException):
+        check.resource_type

@@ -23,6 +23,8 @@ class Runner:
     def run(self, *paths: List[Path]) -> Iterable[CheckResult]:
         for model in self.model_collector.collect(*paths):
             for check in self.check_collector.collect():
+                if check.resource_type != model.resource_type:
+                    continue
                 res = check.run(model)
                 self.results.append(res)
                 self.printer.print(CheckResultRenderable(res))
