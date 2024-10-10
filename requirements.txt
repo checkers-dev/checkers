@@ -1,3 +1,4 @@
+py-markdown-table==1.1.0
 agate==1.9.1
 annotated-types==0.7.0
 astunparse==1.6.3
