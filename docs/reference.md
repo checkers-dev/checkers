@@ -33,6 +33,17 @@ def check_model_descriptions(model: Model):
       show_labels: false
 
 
+::: checkers.contracts.Source
+    options:
+      heading_level: 2
+      inherited_members: true
+      show_bases: false
+      show_root_heading: true
+      show_root_full_path: false
+      show_source: false
+      show_labels: false
+
+
 ::: checkers.contracts.Manifest
     options:
       heading_level: 2
