@@ -6,7 +6,7 @@ from typing import List, Callable
 from types import ModuleType
 from checkers import checks
 from .core import Checker
-from .contracts import Model, Manifest
+from .contracts import Model, Manifest, Source
 from .config import Config
 
 
@@ -46,7 +46,7 @@ class CheckCollector:
         return self.collect_checks_from_module(checks)
 
 
-class ModelCollector:
+class NodeCollector:
     def __init__(self, config: Config):
         self.config = config
 
@@ -56,12 +56,13 @@ class ModelCollector:
             manifest = Manifest(**data, raw=data)
         return manifest
 
-    def collect_all_models(self) -> List[Model]:
+    def collect_all_nodes(self) -> List[Model]:
         manifest = self.load_manifest(self.config.manifest_path)
         results = list()
         for _, v in manifest.nodes.items():
             if v["resource_type"] == "model":
                 results.append(Model(**v, manifest=manifest))
+        results.extend(manifest.sources.values())
         return results
 
     def match_path(self, path: Path, others: List[Path]):
@@ -80,7 +81,7 @@ class ModelCollector:
             return False
 
     def collect(self, *paths: List[Path]) -> List[Model]:
-        all_models = self.collect_all_models()
+        all_models = self.collect_all_nodes()
         if not paths:
             return all_models
         else:
