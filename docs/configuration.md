@@ -34,26 +34,21 @@ Notice that some configuration options appear for both checks, such as the `excl
 
 In the rest of this section we'll describe the check parameters that are common to all checks. For more information about the parameters available for individual checks, you can consult the documentation for that specific check. For example, here's [the documentation for the `check_model_has_description`](checks/check_model_has_description.md).
 
-### `enabled`
-
-This flag can be used to completely disable the check. Disabled checks are never ran.
-
-### `exclude_paths`
-
-A set of paths that the check should skip. The paths must be relative to the dbt project directory.
+::: checkers.config.CheckConfig
+    options:
+      heading_level: 3
+      inherited_members: true
+      show_bases: false
+      show_root_heading: false
+      show_root_full_path: false
+      show_source: false
+      show_labels: false
 
 !!! Info
     Currently Checkers does not support regexes here.
-
-### `include_paths`
-
-A set of paths that the check should target, so that any node which lives _outside_ of these paths will be skipped. The paths must be relative to the dbt project directory.
 
 !!! Info
     If a path is defined in both include and exclude paths, then the model will be skipped. Ie, `exclude_paths` takes priority over `include_paths`.
-
-!!! Info
-    Currently Checkers does not support regexes here.
 
 ## Runner parameters
 

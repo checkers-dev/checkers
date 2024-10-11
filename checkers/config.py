@@ -8,9 +8,21 @@ from .exceptions import ConfigFileNotFoundException, ConfigFileInvalid
 
 class CheckConfig(BaseModel):
     model_config = ConfigDict(extra="allow")
+
     enabled: bool = True
+    """
+    This flag can be used to completely disable the check. Disabled checks are never ran.
+    """
+
     exclude_paths: Optional[List[Path]] = list()
+    """
+    A set of paths that the check should skip. The paths must be relative to the dbt project directory.
+    """
+
     include_paths: Optional[List[Path]] = list()
+    """
+    A set of paths that the check should target, so that any node which lives _outside_ of these paths will be skipped. The paths must be relative to the dbt project directory.
+    """
 
 
 class Config(BaseModel):
