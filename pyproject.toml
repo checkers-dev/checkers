@@ -15,6 +15,7 @@ dependencies = [
   "pydantic<3.0",
   "click<9.0",
   "rich<14.0",
+  "toml<1.0"
 ]
 
 [project.scripts]

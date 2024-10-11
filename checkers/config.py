@@ -1,14 +1,22 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
+from pathlib import Path
 import os
 import toml
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, ConfigDict
 from .exceptions import ConfigFileNotFoundException, ConfigFileInvalid
+
+
+class CheckConfig(BaseModel):
+    model_config = ConfigDict(extra="allow")
+    enabled: bool = True
+    exclude_paths: Optional[List[Path]] = list()
+    include_paths: Optional[List[Path]] = list()
 
 
 class Config(BaseModel):
     dbt_project_dir: str = os.getcwd()
     api_host: str = "https://www.getcheckers.com/api"
-    checks: Dict[str, Dict[str, Any]] = dict()
+    checks: Dict[str, CheckConfig] = dict()
 
     @property
     def manifest_path(self):
