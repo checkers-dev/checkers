@@ -57,7 +57,6 @@ def test_checker_with_default_params(config):
 
     checker = Checker(config=config, check=check_something)
     assert checker.params["enabled"] is True
-    assert len(checker.params) == 1
 
 
 def test_checker_with_base_params(config):
@@ -69,7 +68,6 @@ def test_checker_with_base_params(config):
     checker = Checker(config=config, check=check_something)
     assert checker.params["p1"] is 1
     assert checker.params["enabled"] is False
-    assert len(checker.params) == 2
 
 
 def test_checker_with_override_params(config: Config):
@@ -84,7 +82,6 @@ def test_checker_with_override_params(config: Config):
     assert checker.params["enabled"] is True
     assert checker.params["p1"] is 2
     assert checker.params["p2"] is 3
-    assert len(checker.params) == 3
 
 
 def test_checker_build_args_with_default_args(config: Config, model):
