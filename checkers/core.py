@@ -1,7 +1,7 @@
 import inspect
 from typing import Callable, Dict
 from .contracts import CheckResult, CheckResultStatus, Node
-from .config import Config
+from .config import Config, CheckConfig
 from .exceptions import SkipException, WarnException, InvalidCheckException
 
 
@@ -25,13 +25,17 @@ class Checker:
     def __repr__(self):
         return f"<Checker {self.check.__name__} [{self.resource_type}]>"
 
-    def build_params(self):
-        params = {"enabled": True}
-        default_params = getattr(self.check, "params", dict())
+    def build_check_config(self) -> CheckConfig:
+        builtin_params = getattr(self.check, "params", dict())
         override_params = self.config.checks.get(self.check.__name__, dict())
-        params.update(default_params)
-        params.update(override_params)
-        self._params = params
+        builtin_params.update(override_params)
+        config = CheckConfig(**builtin_params)
+        return config
+
+    def build_params(self) -> Dict:
+        if not self._params:
+            check_config = self.build_check_config()
+            self._params = check_config.model_dump()
         return self._params
 
     def signature(self):

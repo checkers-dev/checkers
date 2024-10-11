@@ -1,7 +1,7 @@
 from pytest import raises
 from checkers.core import Checker, skip, warn
 from checkers.contracts import CheckResultStatus
-from checkers.config import Config
+from checkers.config import Config, CheckConfig
 from checkers.exceptions import SkipException, WarnException, InvalidCheckException
 
 
@@ -137,3 +137,12 @@ def test_checker_identifies_resource_type(
     check = Checker(check=undefined_resource_check, config=config)
     with raises(InvalidCheckException):
         check.resource_type
+
+
+def test_checker_build_check_config(config):
+    def check_mymodel(model):
+        pass
+
+    checker = Checker(check=check_mymodel, config=config)
+    check_config = checker.build_check_config()
+    assert check_config.enabled == True
