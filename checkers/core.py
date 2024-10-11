@@ -60,8 +60,27 @@ class Checker:
     def enabled(self) -> bool:
         return self.params["enabled"] is True
 
+    def skip(self, node: Node) -> None:
+        """
+        Raises a `SkipException` if the node should be skipped per its CheckConfig
+        """
+
+        for exclude_path in self.check_config.exclude_paths:
+            if str(node.original_file_path).startswith(str(exclude_path)):
+                raise SkipException(f"Excluding path {exclude_path}")
+
+        if not self.check_config.include_paths:
+            return
+
+        for include_path in self.check_config.include_paths:
+            if str(node.original_file_path).startswith(str(include_path)):
+                break
+        else:
+            raise SkipException("Path did not match any included paths")
+
     def run(self, node: Node) -> CheckResult:
         try:
+            self.skip(node)  # Raises a SkipException if the model should be skipped
             args = self.build_args(node=node)
             self.check(**args)
             status = CheckResultStatus.passing
