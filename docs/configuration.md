@@ -1,51 +1,75 @@
 # Configuration
 
-Checkers supports three ways of defining configuration.
+Checkers provides two types of configuration.
 
-1. Through a `linter.toml` file.
-2. Through environment variables.
-3. Through command line arguments.
+The first type is _check parameters_. These are variables that control the behaviour of individual checks. For example, you might want to run a specific check only on certain directories in your dbt project.
 
-The command line arguments take precedence over the environment variables, and the environment variables take precedence over the `linter.toml` file.
+The second type is _runner parameters_. These variables control the behaviour of the runner, and generally apply to every check that gets run. For example, you might want to have all checks only ever raise a warning, rather than fail.
 
-## Creating a `linter.toml` file
-
-To generate a configuration file with the default configuration, use the `checkers init` command.
+Both check parameters and runner parameters can be set via a `linter.toml` configuration file. We recommend generating the `linter.toml` using the `init` command, as it will include all default configuration values for all checks.
 
 ```
 checkers init
 ```
 
-This will generate a file in your current directory called `linter.toml`, and it will contain values similar to the following.
-
-```toml
-dbt_project_dir = "/workspaces/checkers/tests/mock"
-
-[checks.check_model_has_description]
-minimum_description_length = 10
-minimum_description_words = 4
-```
-
-Note that file contains two sections. The first section defines the _configuration options_, which control the behaviour of Checkers. The second section defines _check parameters_, which are used by individual checks. Each of these sections is discussed in more detail below.
-
 ## Check Parameters
 
-Checkers supports passing parameters to individual checks in order to customize their behaviour. These parameters can currently only be defined via the `linter.toml` file.
-
-Here's an example parameter configuration for the check `check_model_has_description`.
+The parameters of an individual check are located in a specific section of the configuration file. Here's what that looks like for two checks `check_model_has_description` and `check_model_has_primary_key_test`.
 
 ```toml
 [checks.check_model_has_description]
+enabled = true
+exclude_paths = []
+include_paths = []
 minimum_description_length = 10
 minimum_description_words = 4
+
+[checks.check_model_has_primary_key_test]
+enabled = true
+exclude_paths = []
+include_paths = []
 ```
 
-For more information about the parameters available for the builtin checks, see the documentation for that specific check. For example, here's the documentation for the [`check_model_has_description`](checks/check_model_has_description.md).
+Notice that some configuration options appear for both checks, such as the `exclude_paths` field. Other options are unique to a specific check, such as `minimum_description_word_length`, which is only relevant for the model description checks.
 
-## Configuration Options
+In the rest of this section we'll describe the check parameters that are common to all checks. For more information about the parameters available for individual checks, you can consult the documentation for that specific check. For example, here's [the documentation for the `check_model_has_description`](checks/check_model_has_description.md).
+
+### `enabled`
+
+This flag can be used to completely disable the check. Disabled checks are never ran.
+
+### `exclude_paths`
+
+A set of paths that the check should skip. The paths must be relative to the dbt project directory.
+
+!!! Info
+    Currently Checkers does not support regexes here.
+
+### `include_paths`
+
+A set of paths that the check should target, so that any node which lives _outside_ of these paths will be skipped. The paths must be relative to the dbt project directory.
+
+!!! Info
+    If a path is defined in both include and exclude paths, then the model will be skipped. Ie, `exclude_paths` takes priority over `include_paths`.
+
+!!! Info
+    Currently Checkers does not support regexes here.
+
+## Runner parameters
+
+The runner can be configured in three ways:
+
+- The `linter.toml` file
+- Command line options specified when using the `checkers` cli.
+- Environment variables
+
+Command line options take precedence over environment variables, and environment variables take precedence over values in the `linter.toml` file.
+
+The runner current supports the following parameters.
 
 ### dbt_project_dir
 
+- `checkers --dbt-project-dir ./path/to/project [COMMAND]`
 - Environment variable: `DBT_PROJECT_DIR`.
 
 The path to a dbt project containing the models to lint.

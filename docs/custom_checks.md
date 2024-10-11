@@ -105,20 +105,3 @@ def check_model_has_owner(model: Model):
         skip()
     assert 'owner' in model.meta, "Model must specify an `owner` field in its `meta` block"
 ```
-
-## Warning on models
-
-Another similar use case is to only warn users about issues with some models, while failing on others.
-
-Checkers supports this through providing a special `warn` function.
-
-```py
-from checkers import warn, Model
-
-def check_model_has_owner(model: Model):
-    if model.original_file_path.startswith('finance/'):
-        warn()
-    assert 'owner' in model.meta, "Model must specify an `owner` field in its `meta` block"
-```
-
-Providing a warning can be useful because it alerts your users about an issue without blocking CI. This can be handy when introducing new custom checks where you'd like to validate the check behaves as expected, without potentially blocking your CI.

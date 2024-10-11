@@ -1,5 +1,6 @@
 from typing import Optional, Dict, List, Any
 import datetime as dt
+from pathlib import Path
 from enum import Enum
 from pydantic import BaseModel, Field
 
@@ -92,7 +93,7 @@ class Node(BaseModel):
     The resource type. Can be `model`, `test`, `seed`, etc.
     """
 
-    original_file_path: str
+    original_file_path: Path
     """
     The path to the file that defined the node, relative to the dbt_project's directory
     """
@@ -185,11 +186,6 @@ class Model(Node):
     columns: Dict[str, Column]
     """
     Dictionary containing details about each column defined in the model's yaml file
-    """
-
-    original_file_path: str
-    """
-    The path to the model
     """
 
     fqn: List[str]

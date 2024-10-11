@@ -1,6 +1,8 @@
+from unittest.mock import MagicMock
 from pytest import raises
+from pathlib import Path
 from checkers.core import Checker, skip, warn
-from checkers.contracts import CheckResultStatus
+from checkers.contracts import CheckResultStatus, Model
 from checkers.config import Config, CheckConfig
 from checkers.exceptions import SkipException, WarnException, InvalidCheckException
 
@@ -57,7 +59,6 @@ def test_checker_with_default_params(config):
 
     checker = Checker(config=config, check=check_something)
     assert checker.params["enabled"] is True
-    assert len(checker.params) == 1
 
 
 def test_checker_with_base_params(config):
@@ -69,7 +70,6 @@ def test_checker_with_base_params(config):
     checker = Checker(config=config, check=check_something)
     assert checker.params["p1"] is 1
     assert checker.params["enabled"] is False
-    assert len(checker.params) == 2
 
 
 def test_checker_with_override_params(config: Config):
@@ -84,7 +84,6 @@ def test_checker_with_override_params(config: Config):
     assert checker.params["enabled"] is True
     assert checker.params["p1"] is 2
     assert checker.params["p2"] is 3
-    assert len(checker.params) == 3
 
 
 def test_checker_build_args_with_default_args(config: Config, model):
@@ -127,6 +126,23 @@ def test_checker_run_with_custom_params(config: Config, model):
     assert res.status == CheckResultStatus.passing
 
 
+def test_checker_run_uses_skip(passing_check, model: Model, config: Config):
+    checker = Checker(check=passing_check, config=config)
+    checker.skip = MagicMock()
+    res = checker.run(model)
+    checker.skip.assert_called_once()
+    assert res.status == CheckResultStatus.passing
+
+
+def test_checker_run_handles_skip(passing_check, model: Model, config: Config):
+    checker = Checker(check=passing_check, config=config)
+    checker.skip = MagicMock()
+    checker.skip.side_effect = SkipException
+    res = checker.run(model)
+    checker.skip.assert_called_once()
+    assert res.status == CheckResultStatus.skipped
+
+
 def test_checker_identifies_resource_type(
     config, model_check, source_check, undefined_resource_check
 ):
@@ -148,3 +164,33 @@ def test_checker_build_check_config(config):
     checker = Checker(check=check_mymodel, config=config)
     check_config = checker.build_check_config()
     assert check_config.enabled == True
+
+
+def test_checker_skip(model: Model, config):
+    def check_tmp(model):
+        pass
+
+    m = model.model_copy(
+        update=dict(original_file_path=Path("models/testing/model.sql"))
+    )
+    checker = Checker(check=check_tmp, config=config)
+    conf = checker.check_config
+
+    # Expect no exception here
+    checker.skip(m)
+
+    # Add an include paths which should cause a skip exception
+    checker.check_config = conf.model_copy(
+        update={"include_paths": [Path("models/dne")]}
+    )
+    with raises(SkipException) as err:
+        checker.skip(m)
+        assert "did not match any included paths" in err
+
+    # Remove the include paths but an an exclude paths, which should also have a skip exception
+    checker.check_config = conf.model_copy(
+        update={"include_paths": [], "exclude_paths": [Path("models/testing")]}
+    )
+    with raises(SkipException) as err:
+        checker.skip(m)
+        assert "excluding path models/testing" in err
