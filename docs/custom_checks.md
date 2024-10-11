@@ -1,6 +1,8 @@
 # Custom Checks
 
-This section of the documentation describes how to create a custom check which validates all of the models in a dbt project define an `owner` property in their meta configuration. Ie, all models should have a config block similar to the following.
+One of the key goals of Checkers is to make it easy to define custom validations for your dbt project.
+
+For example, suppose you want to ensure that all of the models in your project define an `owner` property in their meta configuration. Ie, all models should have a config block similar to the following.
 
 ```sql
 {{
@@ -10,15 +12,17 @@ This section of the documentation describes how to create a custom check which v
 }}
 ```
 
+Let's create a custom check that ensures all models include an `owner`.
+
 ## Creating a check
 
-To get started, create a new file in the root of your dbt project called `linter.py`.
+To get started, run the `checkers init` command. This will create a new file `linter.py` which includes a simple example.
 
 ```
-touch linter.py
+checkers init
 ```
 
-Then open the file and add the following code. We'll explain how this works shortly.
+Then open the file and add the following code. Don't worry if the code here doesn't immediately make sense - we'll explain everything shortly.
 
 
 ```py
@@ -30,25 +34,26 @@ def check_model_has_owner(model: Model):
 
 ```
 
-We can run this check against all the models in the dbt project by using the `checkers run` command.
+Now let's run this check against all the models in your dbt project by using the `checkers run` command.
 
 ```
 dbt parse
 checkers run
 ```
 
-!!! Note
-
-    Make sure that you have _parsed_ the dbt project before using `checkers run`. This will produce dbt's `manifest.json` artifact, which Checkers relies on to understand the structure of your dbt project.
-
 You should see output similar to the following.
 
 ```
-PASS check_model_has_owner my_first_dbt_model
-PASS check_model_has_owner my_second_dbt_model
+PASS   model my_first_dbt_model check_model_has_owner
+FAIL   model my_second_dbt_model check_model_has_owner
 ```
 
-Next, let's explore how this works, so that you can write more complex rules as needed.
+!!! Warning
+
+    Make sure that you have _parsed_ the dbt project before using `checkers run`. This will produce dbt's `manifest.json` artifact, which Checkers relies on to understand the structure of your dbt project.
+
+
+Next, let's explore how this works, so that you can write more complex checks to specify your own project's rules.
 
 ## Use `assert` statements for validation
 
@@ -105,3 +110,16 @@ def check_model_has_owner(model: Model):
         skip()
     assert 'owner' in model.meta, "Model must specify an `owner` field in its `meta` block"
 ```
+
+## Checking different resource types
+
+Sometimes you want to check resource types other than models. For example, you might want to check the sources defined in your dbt project always specify a description.
+
+Checkers supports this by changing the first argument passed to your check function.
+
+```py
+def check_sources_have_description(source: Source):
+    assert source.description is not None
+```
+
+Checkers uses the name of the first argument supplied to your check function to pass the correct type of resource to the function. In thise case, because the function used `source` as the first argument, Checkers knew this check should only be ran against dbt sources, and it provided a `Source` object to the function.
