@@ -77,7 +77,9 @@ def test_checker_with_override_params(config: Config):
         pass
 
     check_something.params = {"enabled": False, "p1": 1}
-    config.checks[check_something.__name__] = {"enabled": True, "p1": 2, "p2": 3}
+    config.checks[check_something.__name__] = CheckConfig(
+        **{"enabled": True, "p1": 2, "p2": 3}
+    )
     checker = Checker(config=config, check=check_something)
     assert checker.params["enabled"] is True
     assert checker.params["p1"] is 2

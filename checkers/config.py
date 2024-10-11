@@ -13,7 +13,7 @@ class CheckConfig(BaseModel):
 class Config(BaseModel):
     dbt_project_dir: str = os.getcwd()
     api_host: str = "https://www.getcheckers.com/api"
-    checks: Dict[str, Dict] = dict()
+    checks: Dict[str, CheckConfig] = dict()
 
     @property
     def manifest_path(self):

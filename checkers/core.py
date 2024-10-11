@@ -20,7 +20,7 @@ class Checker:
     def __init__(self, check: Callable, config: Config):
         self.check = check
         self.config = config
-        self._params = dict()
+        self.check_config = self.build_check_config()
 
     def __repr__(self):
         return f"<Checker {self.check.__name__} [{self.resource_type}]>"
@@ -31,12 +31,6 @@ class Checker:
         builtin_params.update(override_params)
         config = CheckConfig(**builtin_params)
         return config
-
-    def build_params(self) -> Dict:
-        if not self._params:
-            check_config = self.build_check_config()
-            self._params = check_config.model_dump()
-        return self._params
 
     def signature(self):
         sig = inspect.signature(self.check).parameters
@@ -60,9 +54,7 @@ class Checker:
 
     @property
     def params(self) -> Dict:
-        if not self._params:
-            self.build_params()
-        return self._params
+        return self.check_config.model_dump()
 
     @property
     def enabled(self) -> bool:
