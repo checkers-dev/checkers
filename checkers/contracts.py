@@ -92,6 +92,11 @@ class Node(BaseModel):
     The resource type. Can be `model`, `test`, `seed`, etc.
     """
 
+    original_file_path: str
+    """
+    The path to the file that defined the node, relative to the dbt_project's directory
+    """
+
     manifest: Manifest
     """
     The Manifest object. Useful for querying the node's parents, children, etc.
@@ -154,7 +159,6 @@ class Source(Node):
     resource_type: str  # "source"
     package_name: str  # "mock"
     path: str  # "models/staging/dummy/schema.yml"
-    original_file_path: str  # "models/staging/dummy/schema.yml"
     unique_id: str  # "source.mock.dummy.table1"
     fqn: List[str]  # ["mock","staging","dummy","dummy","table1"]
     source_name: str  # "dummy"

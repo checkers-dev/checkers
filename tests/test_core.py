@@ -1,7 +1,7 @@
 from pytest import raises
 from checkers.core import Checker, skip, warn
 from checkers.contracts import CheckResultStatus
-from checkers.config import Config
+from checkers.config import Config, CheckConfig
 from checkers.exceptions import SkipException, WarnException, InvalidCheckException
 
 
@@ -77,7 +77,9 @@ def test_checker_with_override_params(config: Config):
         pass
 
     check_something.params = {"enabled": False, "p1": 1}
-    config.checks[check_something.__name__] = {"enabled": True, "p1": 2, "p2": 3}
+    config.checks[check_something.__name__] = CheckConfig(
+        **{"enabled": True, "p1": 2, "p2": 3}
+    )
     checker = Checker(config=config, check=check_something)
     assert checker.params["enabled"] is True
     assert checker.params["p1"] is 2
@@ -137,3 +139,12 @@ def test_checker_identifies_resource_type(
     check = Checker(check=undefined_resource_check, config=config)
     with raises(InvalidCheckException):
         check.resource_type
+
+
+def test_checker_build_check_config(config):
+    def check_mymodel(model):
+        pass
+
+    checker = Checker(check=check_mymodel, config=config)
+    check_config = checker.build_check_config()
+    assert check_config.enabled == True
