@@ -1,4 +1,4 @@
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List, Any, Union
 import datetime as dt
 from pathlib import Path
 from enum import Enum
@@ -42,17 +42,34 @@ class CheckResult(BaseModel):
         )
 
 
+ResourceType = Union["Model", "Test"]
+
+
 class Manifest(BaseModel):
+
+    __parsed_nodes__ = dict()
 
     raw: Dict[str, Any]
     """
-    Dictionary containg the raw manifest details
+    Dictionary containing the raw manifest details
     """
 
-    nodes: Dict[str, Dict]
+    raw_nodes: Dict[str, Dict] = Field(alias="nodes")
     """
     Dictionary mapping node_id's to node details.
     """
+
+    def parse_nodes(self) -> Dict[str, ResourceType]:
+        if self.__parsed_nodes__:
+            return self.__parsed_nodes__
+        for k, v in self.raw_nodes.items():
+            if v["resource_type"] == "model":
+                self.__parsed_nodes__[k] = Model(**v, manifest=self)
+            if v["resource_type"] == "test":
+                self.__parsed_nodes__[k] = Test(**v, manifest=self)
+        for k, v in self.raw["sources"].items():
+            self.__parsed_nodes__[k] = Source(**v, manifest=self)
+        return self.__parsed_nodes__
 
     parent_map: Dict[str, List[str]]
     """
@@ -66,14 +83,14 @@ class Manifest(BaseModel):
 
     @property
     def sources(self) -> Dict[str, "Source"]:
-        return {k: Source(**v, manifest=self) for k, v in self.raw["sources"].items()}
+        return {
+            k: v for k, v in self.parse_nodes().items() if v.resource_type == "source"
+        }
 
     @property
     def models(self) -> Dict[str, "Model"]:
         return {
-            k: Model(**v, manifest=self)
-            for k, v in self.nodes.items()
-            if v["resource_type"] == "model"
+            k: v for k, v in self.parse_nodes().items() if v.resource_type == "model"
         }
 
     def get_model_by_name(self, name: str) -> Optional["Model"]:
@@ -220,7 +237,7 @@ class Model(Node):
     def tests(self) -> List[Test]:
         results = []
         for c in self.child_map:
-            if self.manifest.nodes[c]["resource_type"] == "test":
-                d = self.manifest.nodes[c]
+            if self.manifest.raw_nodes[c]["resource_type"] == "test":
+                d = self.manifest.raw_nodes[c]
                 results.append(Test(**d, manifest=self.manifest))
         return results

@@ -59,7 +59,7 @@ class NodeCollector:
     def collect_all_nodes(self) -> List[Model]:
         manifest = self.load_manifest(self.config.manifest_path)
         results = list()
-        for _, v in manifest.nodes.items():
+        for _, v in manifest.raw_nodes.items():
             if v["resource_type"] == "model":
                 results.append(Model(**v, manifest=manifest))
         results.extend(manifest.sources.values())
