@@ -15,6 +15,7 @@ from checkers.printer import Printer
 from checkers.config import Config
 from checkers.exceptions import WarnException, SkipException
 from checkers import config as config_module
+from checkers.schemas.manifest.v12 import WritableManifest as ManifestSchema
 
 
 def pytest_configure(config):
@@ -119,7 +120,8 @@ def mock_dbt_project(tmpdir_factory):
 def manifest(mock_dbt_project: Path):
     manifest_path = mock_dbt_project / "target" / "manifest.json"
     data = json.loads(manifest_path.read_text())
-    return Manifest(**data, raw=data)
+    parsed = ManifestSchema(**data)
+    return Manifest(**data, raw=data, parsed=parsed)
 
 
 @fixture

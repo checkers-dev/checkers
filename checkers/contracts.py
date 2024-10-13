@@ -3,9 +3,9 @@ import datetime as dt
 from pathlib import Path
 from enum import Enum
 from pydantic import BaseModel, Field
+from checkers.schemas.manifest.v12 import WritableManifest as ManifestSchema
 
 
-# I think let's make the values here `pass`, `warn`, `error`, etc
 class CheckResultStatus(Enum):
     passing = "PASS"
     warning = "WARN"
@@ -52,6 +52,11 @@ class Manifest(BaseModel):
     raw: Dict[str, Any]
     """
     Dictionary containing the raw manifest details
+    """
+
+    parsed: ManifestSchema
+    """
+    Parsed manifest data
     """
 
     raw_nodes: Dict[str, Dict] = Field(alias="nodes")
