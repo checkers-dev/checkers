@@ -7,6 +7,7 @@ from types import ModuleType
 from checkers import checks
 from .core import Checker
 from .contracts import Model, Manifest, Source
+from .schemas.manifest.v12 import WritableManifest as ManifestSchema
 from .config import Config
 
 
@@ -53,13 +54,14 @@ class NodeCollector:
     def load_manifest(self, path: str) -> Manifest:
         with open(path) as fh:
             data = json.load(fh)
-            manifest = Manifest(**data, raw=data)
+            parsed = ManifestSchema(**data)
+            manifest = Manifest(**data, raw=data, parsed=parsed)
         return manifest
 
     def collect_all_nodes(self) -> List[Model]:
         manifest = self.load_manifest(self.config.manifest_path)
         results = list()
-        for _, v in manifest.nodes.items():
+        for _, v in manifest.raw_nodes.items():
             if v["resource_type"] == "model":
                 results.append(Model(**v, manifest=manifest))
         results.extend(manifest.sources.values())
